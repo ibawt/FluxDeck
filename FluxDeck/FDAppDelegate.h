@@ -7,9 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "FluxDeckViewController.h"
 
 @interface FDAppDelegate : NSObject <NSApplicationDelegate>
 
+@property (assign) IBOutlet NSView   *mainView;
 @property (assign) IBOutlet NSWindow *window;
-
+@property (nonatomic,strong) IBOutlet FluxDeckViewController *viewController;
 @end

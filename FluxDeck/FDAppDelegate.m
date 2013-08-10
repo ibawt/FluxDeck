@@ -12,7 +12,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Insert code here to initialize your application
+	self.viewController = [[FluxDeckViewController alloc] initWithNibName:@"FluxDeckViewController" bundle:nil];
+	[self.window.contentView addSubview:self.viewController.view];
+	self.viewController.view.frame = ((NSView*)self.window.contentView).bounds;
 }
-
 @end

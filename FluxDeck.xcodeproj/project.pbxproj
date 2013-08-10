@@ -17,6 +17,14 @@
 		B537DDC917B6516400052DD3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537DDA917B6516300052DD3 /* Cocoa.framework */; };
 		B537DDD117B6516400052DD3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B537DDCF17B6516400052DD3 /* InfoPlist.strings */; };
 		B537DDD417B6516400052DD3 /* FluxDeckTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDD317B6516400052DD3 /* FluxDeckTests.m */; };
+		B537DDE017B6526A00052DD3 /* FDUser.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDDF17B6526A00052DD3 /* FDUser.m */; };
+		B537DDE317B6528A00052DD3 /* FDRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDE217B6528900052DD3 /* FDRequest.m */; };
+		B537DDE917B66D7E00052DD3 /* FDFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDE817B66D7E00052DD3 /* FDFlow.m */; };
+		B537DDEF17B677B700052DD3 /* FluxDeckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDED17B677B700052DD3 /* FluxDeckViewController.m */; };
+		B537DDF017B677B700052DD3 /* FluxDeckViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DDEE17B677B700052DD3 /* FluxDeckViewController.xib */; };
+		B537DDF417B6837500052DD3 /* FDFlowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDF217B6837500052DD3 /* FDFlowViewController.m */; };
+		B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DDF317B6837500052DD3 /* FDFlowViewController.xib */; };
+		B537DDF817B68ED900052DD3 /* FDMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDF717B68ED900052DD3 /* FDMessage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +57,21 @@
 		B537DDD017B6516400052DD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B537DDD217B6516400052DD3 /* FluxDeckTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FluxDeckTests.h; sourceTree = "<group>"; };
 		B537DDD317B6516400052DD3 /* FluxDeckTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FluxDeckTests.m; sourceTree = "<group>"; };
+		B537DDDD17B6519D00052DD3 /* FluxDeck.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = FluxDeck.entitlements; sourceTree = "<group>"; };
+		B537DDDE17B6526A00052DD3 /* FDUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDUser.h; sourceTree = "<group>"; };
+		B537DDDF17B6526A00052DD3 /* FDUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDUser.m; sourceTree = "<group>"; };
+		B537DDE117B6528900052DD3 /* FDRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRequest.h; sourceTree = "<group>"; };
+		B537DDE217B6528900052DD3 /* FDRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRequest.m; sourceTree = "<group>"; };
+		B537DDE717B66D7E00052DD3 /* FDFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFlow.h; sourceTree = "<group>"; };
+		B537DDE817B66D7E00052DD3 /* FDFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFlow.m; sourceTree = "<group>"; };
+		B537DDEC17B677B700052DD3 /* FluxDeckViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FluxDeckViewController.h; sourceTree = "<group>"; };
+		B537DDED17B677B700052DD3 /* FluxDeckViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FluxDeckViewController.m; sourceTree = "<group>"; };
+		B537DDEE17B677B700052DD3 /* FluxDeckViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FluxDeckViewController.xib; sourceTree = "<group>"; };
+		B537DDF117B6837500052DD3 /* FDFlowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFlowViewController.h; sourceTree = "<group>"; };
+		B537DDF217B6837500052DD3 /* FDFlowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFlowViewController.m; sourceTree = "<group>"; };
+		B537DDF317B6837500052DD3 /* FDFlowViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDFlowViewController.xib; sourceTree = "<group>"; };
+		B537DDF617B68ED900052DD3 /* FDMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMessage.h; sourceTree = "<group>"; };
+		B537DDF717B68ED900052DD3 /* FDMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMessage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,10 +137,25 @@
 		B537DDAF17B6516300052DD3 /* FluxDeck */ = {
 			isa = PBXGroup;
 			children = (
+				B537DDDD17B6519D00052DD3 /* FluxDeck.entitlements */,
 				B537DDBB17B6516300052DD3 /* FDAppDelegate.h */,
 				B537DDBC17B6516300052DD3 /* FDAppDelegate.m */,
+				B537DDDE17B6526A00052DD3 /* FDUser.h */,
+				B537DDDF17B6526A00052DD3 /* FDUser.m */,
+				B537DDE117B6528900052DD3 /* FDRequest.h */,
+				B537DDE217B6528900052DD3 /* FDRequest.m */,
+				B537DDEC17B677B700052DD3 /* FluxDeckViewController.h */,
+				B537DDED17B677B700052DD3 /* FluxDeckViewController.m */,
+				B537DDEE17B677B700052DD3 /* FluxDeckViewController.xib */,
 				B537DDBE17B6516400052DD3 /* MainMenu.xib */,
 				B537DDB017B6516300052DD3 /* Supporting Files */,
+				B537DDE717B66D7E00052DD3 /* FDFlow.h */,
+				B537DDE817B66D7E00052DD3 /* FDFlow.m */,
+				B537DDF117B6837500052DD3 /* FDFlowViewController.h */,
+				B537DDF217B6837500052DD3 /* FDFlowViewController.m */,
+				B537DDF617B68ED900052DD3 /* FDMessage.h */,
+				B537DDF717B68ED900052DD3 /* FDMessage.m */,
+				B537DDF317B6837500052DD3 /* FDFlowViewController.xib */,
 			);
 			path = FluxDeck;
 			sourceTree = "<group>";
@@ -228,6 +266,8 @@
 				B537DDB417B6516300052DD3 /* InfoPlist.strings in Resources */,
 				B537DDBA17B6516300052DD3 /* Credits.rtf in Resources */,
 				B537DDC017B6516400052DD3 /* MainMenu.xib in Resources */,
+				B537DDF017B677B700052DD3 /* FluxDeckViewController.xib in Resources */,
+				B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +304,12 @@
 			files = (
 				B537DDB617B6516300052DD3 /* main.m in Sources */,
 				B537DDBD17B6516300052DD3 /* FDAppDelegate.m in Sources */,
+				B537DDE017B6526A00052DD3 /* FDUser.m in Sources */,
+				B537DDE317B6528A00052DD3 /* FDRequest.m in Sources */,
+				B537DDE917B66D7E00052DD3 /* FDFlow.m in Sources */,
+				B537DDEF17B677B700052DD3 /* FluxDeckViewController.m in Sources */,
+				B537DDF417B6837500052DD3 /* FDFlowViewController.m in Sources */,
+				B537DDF817B68ED900052DD3 /* FDMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +429,8 @@
 		B537DDD817B6516400052DD3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FluxDeck/FluxDeck.entitlements;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FluxDeck/FluxDeck-Prefix.pch";
@@ -395,6 +443,8 @@
 		B537DDD917B6516400052DD3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FluxDeck/FluxDeck.entitlements;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FluxDeck/FluxDeck-Prefix.pch";
