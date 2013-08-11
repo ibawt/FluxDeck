@@ -7,10 +7,10 @@
 //
 
 #import "FDUser.h"
-
+#import "FDRequest.h"
+#import "FDImageCache.h"
 
 @implementation FDUser
-
 
 -(void)updateFromJSON:(NSObject *)json
 {
@@ -19,11 +19,13 @@
 		self.userID = [NSString stringWithFormat:@"%@",[dict valueForKey:@"id"]];
 		self.email = [dict valueForKey:@"email"];
 		self.nick = [dict valueForKey:@"nick"];
-		self.name = [dict valueForKey:@"avatar"];
+		self.name = [dict valueForKey:@"name"];
+		self.avatar = [dict valueForKey:@"avatar"];
 		self.status = [dict valueForKey:@"status"];
 		self.disabled = [dict valueForKey:@"disabled"];
 		self.lastActivity = [dict valueForKey:@"last_activity"];
 		self.lastPing = [dict valueForKey:@"last_ping"];
+		[FDImageCache getDataForURL:self.avatar onComplete:nil];
 	}
 }
 @end

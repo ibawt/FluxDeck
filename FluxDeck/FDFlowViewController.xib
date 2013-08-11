@@ -495,7 +495,6 @@
 														<string key="NSFrame">{{1, 119}, {237, 15}}</string>
 														<reference key="NSSuperview" ref="210170809"/>
 														<reference key="NSWindow"/>
-														<reference key="NSNextKeyView"/>
 														<string key="NSReuseIdentifierKey">_NS:60</string>
 														<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 														<int key="NSsFlags">1</int>
@@ -627,8 +626,8 @@
 									<string key="NSAntiCompressionPriority">{250, 750}</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="114020564">
-										<int key="NSCellFlags">67108928</int>
-										<int key="NSCellFlags2">272631808</int>
+										<int key="NSCellFlags">67108864</int>
+										<int key="NSCellFlags2">1346371584</int>
 										<string key="NSContents">Table View Cell</string>
 										<reference key="NSSupport" ref="1022290194"/>
 										<reference key="NSControlView" ref="545430247"/>

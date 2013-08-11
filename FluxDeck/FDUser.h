@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FDUser : NSObject
+@interface FDUser : NSObject<NSConnectionDelegate>
 
 -(void)updateFromJSON:(NSObject *)json;
 
@@ -21,5 +21,5 @@
 @property (nonatomic,strong) NSString*disabled;
 @property (nonatomic,strong) NSString *lastActivity;
 @property (nonatomic,strong) NSString *lastPing;
-
+@property (strong) NSImage *avatarImage;
 @end

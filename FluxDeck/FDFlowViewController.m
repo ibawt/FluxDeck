@@ -9,6 +9,9 @@
 #import "FDFlowViewController.h"
 #import "FDRequest.h"
 #import "FDMessage.h"
+#import "FDUser.h"
+#import "FluxDeckViewController.h"
+#import "FDImageCache.h"
 
 @interface FDFlowViewController ()
 
@@ -36,7 +39,7 @@
 
 -(void)populateUsers
 {
-	
+	[self.userTableView reloadData];
 }
 
 -(IBAction)textEntered:(id)sender
@@ -50,7 +53,7 @@
 		return [self.messages count];
 	}
 	else if( aTableView == self.userTableView ) {
-		
+		return [self.flow.users count];
 	}
 	else if( aTableView == self.influxTableView ) {
 		
@@ -74,7 +77,15 @@
 		}
 		return cellView;
 	} else if( tableView == self.userTableView ) {
-
+		NSTableCellView *cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
+		NSDictionary *users = [FluxDeckViewController instance].users;
+		NSString *userID = [self.flow.users objectAtIndex:row];
+		FDUser *user = [users objectForKey:userID];
+		cell.textField.stringValue = user.nick;
+		[FDImageCache getDataForURL:user.avatar onComplete:^(NSData *data, NSError *error){
+			cell.imageView.image = [[NSImage alloc] initWithData:data];
+		}];
+		return cell;
 	} else if( tableView == self.influxTableView ) {
 
 	}
