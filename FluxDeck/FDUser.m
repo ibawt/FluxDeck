@@ -9,6 +9,7 @@
 #import "FDUser.h"
 #import "FDRequest.h"
 #import "FDImageCache.h"
+#import "FluxDeckViewController.h"
 
 @implementation FDUser
 
@@ -29,3 +30,9 @@
 	}
 }
 @end
+
+
+FDUser *FDGetUserFromID(NSString *userID)
+{
+	return [[FluxDeckViewController instance].users objectForKey:userID];
+}

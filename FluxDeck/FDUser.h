@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface FDUser : NSObject<NSConnectionDelegate>
 
 -(void)updateFromJSON:(NSObject *)json;
@@ -23,3 +24,6 @@
 @property (nonatomic,strong) NSString *lastPing;
 @property (strong) NSImage *avatarImage;
 @end
+
+
+FDUser *FDGetUserFromID(NSString *userID);

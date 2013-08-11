@@ -10,17 +10,19 @@
 
 @implementation FDMessage
 
--(void)parseJSON:(NSObject *)o
+-(void)parseJSON:(NSObject *)obj
 {
+	NSDictionary *o = (NSDictionary*)obj;
+
 	self.app = [o valueForKey:@"app"];
-	self.attachments = [o valueForKey:@"attachments"];
-	self.content = [o valueForKey:@"content"];
+	self.attachments = o[@"attachments"];
+	self.content = o[@"content"];
 	self.edited = [o valueForKey:@"edited"];
 	self.flow = [o valueForKey:@"flow"];
-	self.msgID = [o valueForKey:@"id"];
-	self.sent = [o valueForKey:@"sent"];
+	self.msgID = [NSString stringWithFormat:@"%@",[o valueForKey:@"id"]];
+	self.sent = [NSString stringWithFormat:@"%@",[o valueForKey:@"sent"]];
 	self.tags = [o valueForKey:@"tags"];
-	self.user = [o valueForKey:@"user"];
+	self.user = [NSString stringWithFormat:@"%@",[o valueForKey:@"user"]];
 	self.uuid = [o valueForKey:@"uuid"];
 }
 

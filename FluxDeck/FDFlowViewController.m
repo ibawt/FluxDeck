@@ -14,7 +14,7 @@
 #import "FDImageCache.h"
 
 @interface FDFlowViewController ()
-
+@property (strong) FDRequest* requestStream;
 @end
 
 @implementation FDFlowViewController
@@ -30,11 +30,35 @@
     return self;
 }
 
+-(NSAttributedString*)parseMessageContent:(NSString*)str
+{
+	NSError *error = nil;
+
+	NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:&error];
+
+	NSArray *matches = [linkDetector matchesInString:str options:0 range:NSMakeRange(0, str.length)];
+	NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:str];
+
+	for (NSTextCheckingResult *match in matches) {
+		if (match.URL) {
+			NSDictionary *linkAttributes = @{
+				   NSLinkAttributeName: match.URL,
+			};
+			[attrString addAttributes:linkAttributes range:match.range];
+		}
+	}
+	return attrString;
+}
+
 -(void)setFlow:(FDFlow *)flow
 {
 	_flow = flow;
 	[self fetchMessages];
 	[self populateUsers];
+
+	self.requestStream = [FDRequest initWithString:[NSString stringWithFormat:@"%@/messages", self.flow.url] withBlock:^(NSObject *object, NSError *error){
+		
+	} forStreaming:YES ];
 }
 
 -(void)populateUsers
@@ -72,7 +96,10 @@
 		if( [tableColumn.identifier isEqualToString:@"ChatColumn"] )
 		{
 			FDMessage *msg = [self.messages objectAtIndex:row];
-			cellView.textField.stringValue = msg.content;
+			cellView.textField.attributedStringValue = [self parseMessageContent:[NSString stringWithFormat:@"%@: %@", FDGetUserFromID(msg.user).nick, msg.content]];
+			
+			cellView.toolTip = FDGetUserFromID(msg.user).name;
+			
 			return cellView;
 		}
 		return cellView;
@@ -98,10 +125,10 @@
 
 	[FDRequest initWithString:url withBlock:^(NSObject* o, NSError *error) {
 		NSArray *array = (NSArray*)o;
-		NSMutableArray *msgs = [[NSMutableArray alloc]init];
+		NSMutableArray *msgs = [[NSMutableArray alloc] init];
 		for( NSDictionary *d in array ) {
 			NSString *event = [d valueForKey:@"event"];
-
+			NSLog(@"event name: %@", event);
 			if( [event isEqualToString:@"message"]) {
 				FDMessage *msg = [[FDMessage alloc] init];
 				[msg parseJSON:d];
