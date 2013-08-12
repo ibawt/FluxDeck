@@ -56,8 +56,14 @@
 
 -(void)fetchMessages
 {
-
-	self.requestStream = [FDRequest initWithString:[NSString stringWithFormat:@"%@/messages", self.flow.url] withBlock:^(NSObject *object, NSError *error){
+	NSString *url;
+	if( self.lastMessageID) {
+		url = [NSString stringWithFormat:@"%@/messages?limit=100&since_id=%@", self.flow.url, self.lastMessageID];
+	} else {
+		url = [NSString stringWithFormat:@"%@/messages?limit=100", self.flow.url];
+	}
+	
+	self.requestStream = [FDRequest initWithString:url withBlock:^(NSObject *object, NSError *error){
 		NSMutableArray *msgs = [[NSMutableArray alloc] init];
 
 		if( [object isKindOfClass:[NSDictionary class]]) {
@@ -79,24 +85,20 @@
 				if( [event isEqualToString:@"message"]) {
 					FDMessage *msg = [[FDMessage alloc] init];
 					[msg parseJSON:d];
-					NSLog(@"%@", msg.content);
 					[msgs addObject:msg];
+					self.lastMessageID = msg.msgID;
 					//[self makeChatCell:msg];
 				}
 			}
 
 			[self.chatTableView beginUpdates];
-			self.messages = msgs;
+			[self.messages addObjectsFromArray:msgs];
 			[self.chatTableView endUpdates];
 			[self.chatTableView reloadData];
 			[self.chatTableView scrollRowToVisible:[self.messages count] -1 ];
 
 
 		}
-		if(! self.requestStream.isActive) {
-			NSLog(@"closed stream");
-		}
-
 		[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
 	} forStreaming:NO ];
 
@@ -154,20 +156,8 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	if( tableView == self.chatTableView ) {
-		// Get a new ViewCell
-		NSTableCellView *cellView = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
-
-		// Since this is a single-column table view, this would not be necessary.
-		// But it's a good practice to do it in order by remember it when a table is multicolumn.
-		if( [tableColumn.identifier isEqualToString:@"ChatColumn"] )
-		{
-			FDMessage *msg = [self.messages objectAtIndex:row];
-			//cellView.textField.attributedStringValue = [self parseMessageContent:[NSString stringWithFormat:@"%@: %@", FDGetUserFromID(msg.user).nick, msg.content]];
-			//[cellView.textField setSelectable:YES];
-
-			return [self makeChatCell:msg];
-		}
-		return cellView;
+		FDMessage *msg = [self.messages objectAtIndex:row];
+		return [self makeChatCell:msg];
 	} else if( tableView == self.userTableView ) {
 		NSTableCellView *cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
 		NSDictionary *users = [FluxDeckViewController instance].users;

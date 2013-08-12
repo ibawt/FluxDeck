@@ -16,7 +16,7 @@
 @property (strong) IBOutlet NSTableView *chatTableView;
 @property (strong) IBOutlet NSTableView *userTableView;
 @property (strong) IBOutlet NSTableView *influxTableView;
-
+@property (strong) IBOutlet NSString    *lastMessageID;
 @property (nonatomic,strong) FDFlow *flow;
 @property (nonatomic,strong) NSMutableArray *messages;
 @end
