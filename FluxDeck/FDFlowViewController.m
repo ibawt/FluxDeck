@@ -12,6 +12,7 @@
 #import "FDUser.h"
 #import "FluxDeckViewController.h"
 #import "FDImageCache.h"
+#import "FDChatLineView.h"
 
 @interface FDFlowViewController ()
 @property (strong) FDRequest* requestStream;
@@ -31,9 +32,11 @@
 }
 
 
--(NSAttributedString*)parseMessageContent:(NSString*)str
+-(NSAttributedString*)parseMessageContent:(FDMessage*)fd
 {
 	NSError *error = nil;
+
+	NSString *str = fd.content;
 
 	NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:(NSTextCheckingTypes)NSTextCheckingTypeLink error:&error];
 
@@ -72,25 +75,6 @@
 {
 
 }
-/*
--(BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
-{
-	NSInteger selected = row;
-
-    // Get row at specified index
-    NSTableCellView *selectedRow = [tableView viewAtColumn:0 row:selected makeIfNecessary:YES];
-
-    // Get row's text field
-    NSTextField *selectedRowTextField = [selectedRow textField];
-
-    // Focus on text field to make it auto-editable
-    [[self.view window] makeFirstResponder:selectedRowTextField];
-
-    // Set the keyboard carat to the beginning of the text field
-    [[selectedRowTextField currentEditor] setSelectedRange:NSMakeRange(0, 0)];
-	return YES;
-}
- */
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
@@ -117,6 +101,11 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 	;
 }
 
+
+-(BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
+{
+	return NO;
+}
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	if( tableView == self.chatTableView ) {
 		// Get a new ViewCell
@@ -127,9 +116,10 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		if( [tableColumn.identifier isEqualToString:@"ChatColumn"] )
 		{
 			FDMessage *msg = [self.messages objectAtIndex:row];
-			cellView.textField.attributedStringValue = [self parseMessageContent:[NSString stringWithFormat:@"%@: %@", FDGetUserFromID(msg.user).nick, msg.content]];
-			[cellView.textField setSelectable:YES];
-			return cellView;
+			//cellView.textField.attributedStringValue = [self parseMessageContent:[NSString stringWithFormat:@"%@: %@", FDGetUserFromID(msg.user).nick, msg.content]];
+			//[cellView.textField setSelectable:YES];
+
+			return [self makeChatCell:msg];
 		}
 		return cellView;
 	} else if( tableView == self.userTableView ) {
@@ -154,11 +144,44 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 -(CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
 	if( tableView == self.chatTableView ) {
-		NSString *c = [[self.messages objectAtIndex:row] content];
-		NSRect rect = [c boundingRectWithSize:NSMakeSize(self.chatTableView.frame.size.width, 0) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil];
-		return MAX( rect.size.height, 40);
+		FDMessage* msg = [self.messages objectAtIndex:row];
+		NSAttributedString *str = [self parseMessageContent:msg];
+
+		NSRect bounds = [str boundingRectWithSize: NSMakeSize(tableView.bounds.size.width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
+		//v.frame = NSMakeRect(0, 0, v.bounds.size.width + 20, bounds.size.height + 20);
+		//[//v.textView.layoutManager ensureLayoutForTextContainer:v.textView.textContainer];
+
+		return bounds.size.height + 10;
+
 	}
 	return 40;
+}
+
+-(NSView*)makeChatCell:(FDMessage*)msg
+{
+	NSArray *objs = nil;
+
+	[[NSBundle mainBundle] loadNibNamed:@"ChatLineView" owner:self topLevelObjects:&objs];
+
+	FDChatLineView *v = nil;
+	for( NSObject *o in objs ) {
+		if( [o class]  == [FDChatLineView class] ) {
+			v = (FDChatLineView*)o;
+			break;
+		}
+	}
+
+	NSAssert( v != nil, @"Can't find view in nib");
+	[v setFrameSize:NSMakeSize(self.chatTableView.frame.size.width, 60 )];
+	NSAttributedString *str = [self parseMessageContent:msg];
+	[[v textStorage] setAttributedString:str];
+	CGFloat width = self.chatTableView.bounds.size.width;
+	NSRect bounds = [str boundingRectWithSize: NSMakeSize(width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
+	v.frame = NSMakeRect(0, 0, width + 20, bounds.size.height + 20);
+	//[//v.textView.layoutManager ensureLayoutForTextContainer:v.textView.textContainer];
+	
+	return v;
+	//[self.view addSubview:v];
 }
 
 -(void)fetchMessages
@@ -170,11 +193,12 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		NSMutableArray *msgs = [[NSMutableArray alloc] init];
 		for( NSDictionary *d in array ) {
 			NSString *event = [d valueForKey:@"event"];
-			NSLog(@"event name: %@", event);
 			if( [event isEqualToString:@"message"]) {
 				FDMessage *msg = [[FDMessage alloc] init];
 				[msg parseJSON:d];
+				NSLog(@"%@", msg.content);
 				[msgs addObject:msg];
+				//[self makeChatCell:msg];
 			}
 		}
 

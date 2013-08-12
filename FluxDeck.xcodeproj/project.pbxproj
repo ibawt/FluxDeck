@@ -26,6 +26,8 @@
 		B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DDF317B6837500052DD3 /* FDFlowViewController.xib */; };
 		B537DDF817B68ED900052DD3 /* FDMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDF717B68ED900052DD3 /* FDMessage.m */; };
 		B537DDFB17B6BA7600052DD3 /* FDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDFA17B6BA7600052DD3 /* FDImageCache.m */; };
+		B537DE0617B903D500052DD3 /* ChatLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DE0517B903D500052DD3 /* ChatLineView.xib */; };
+		B537DE0917B905BE00052DD3 /* FDChatLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DE0817B905BE00052DD3 /* FDChatLineView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +77,9 @@
 		B537DDF717B68ED900052DD3 /* FDMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMessage.m; sourceTree = "<group>"; };
 		B537DDF917B6BA7600052DD3 /* FDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDImageCache.h; sourceTree = "<group>"; };
 		B537DDFA17B6BA7600052DD3 /* FDImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDImageCache.m; sourceTree = "<group>"; };
+		B537DE0517B903D500052DD3 /* ChatLineView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatLineView.xib; sourceTree = "<group>"; };
+		B537DE0717B905BE00052DD3 /* FDChatLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDChatLineView.h; sourceTree = "<group>"; };
+		B537DE0817B905BE00052DD3 /* FDChatLineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDChatLineView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +161,9 @@
 				B537DDE817B66D7E00052DD3 /* FDFlow.m */,
 				B537DDF117B6837500052DD3 /* FDFlowViewController.h */,
 				B537DDF217B6837500052DD3 /* FDFlowViewController.m */,
+				B537DE0517B903D500052DD3 /* ChatLineView.xib */,
+				B537DE0717B905BE00052DD3 /* FDChatLineView.h */,
+				B537DE0817B905BE00052DD3 /* FDChatLineView.m */,
 				B537DDF617B68ED900052DD3 /* FDMessage.h */,
 				B537DDF717B68ED900052DD3 /* FDMessage.m */,
 				B537DDF317B6837500052DD3 /* FDFlowViewController.xib */,
@@ -273,6 +281,7 @@
 				B537DDC017B6516400052DD3 /* MainMenu.xib in Resources */,
 				B537DDF017B677B700052DD3 /* FluxDeckViewController.xib in Resources */,
 				B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */,
+				B537DE0617B903D500052DD3 /* ChatLineView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +325,7 @@
 				B537DDF417B6837500052DD3 /* FDFlowViewController.m in Sources */,
 				B537DDF817B68ED900052DD3 /* FDMessage.m in Sources */,
 				B537DDFB17B6BA7600052DD3 /* FDImageCache.m in Sources */,
+				B537DE0917B905BE00052DD3 /* FDChatLineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
