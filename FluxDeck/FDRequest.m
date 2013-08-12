@@ -44,7 +44,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	}
 
 	if( streaming ) {
-		url = [url stringByReplacingOccurrencesOfString:@"api" withString:@"streaming"];
+		url = [url stringByReplacingOccurrencesOfString:@"api" withString:@"stream"];
 	}
 
 	nsurl = [NSURL URLWithString:url];
@@ -95,6 +95,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 					NSError *error = nil;
 					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:0 error:&error];
 					self.callback(o, error);
+					NSLog(@"in here?");
 					[self.data setLength:0];
 				}
 			}

@@ -54,16 +54,62 @@
 	return attrString;
 }
 
+-(void)fetchMessages
+{
+
+	self.requestStream = [FDRequest initWithString:[NSString stringWithFormat:@"%@/messages", self.flow.url] withBlock:^(NSObject *object, NSError *error){
+		NSMutableArray *msgs = [[NSMutableArray alloc] init];
+
+		if( [object isKindOfClass:[NSDictionary class]]) {
+			// one item
+
+			NSDictionary *dict = (NSDictionary*)object;
+
+			if( [dict[@"event"] isEqualToString:@"message"]) {
+				FDMessage *msg = [[FDMessage alloc] init];
+				[msg parseJSON:dict];
+				NSLog(@"%@", msg.content);
+				[msgs addObject:msg];
+
+			}
+		} else {
+			NSArray *array = (NSArray*)object;
+			for( NSDictionary *d in array ) {
+				NSString *event = [d valueForKey:@"event"];
+				if( [event isEqualToString:@"message"]) {
+					FDMessage *msg = [[FDMessage alloc] init];
+					[msg parseJSON:d];
+					NSLog(@"%@", msg.content);
+					[msgs addObject:msg];
+					//[self makeChatCell:msg];
+				}
+			}
+
+			[self.chatTableView beginUpdates];
+			self.messages = msgs;
+			[self.chatTableView endUpdates];
+			[self.chatTableView reloadData];
+			[self.chatTableView scrollRowToVisible:[self.messages count] -1 ];
+
+
+		}
+		if(! self.requestStream.isActive) {
+			NSLog(@"closed stream");
+		}
+
+		[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
+	} forStreaming:NO ];
+
+}
+
 -(void)setFlow:(FDFlow *)flow
 {
 	_flow = flow;
-	[self fetchMessages];
+	//[self fetchMessages];
 	[self populateUsers];
 	[self.chatTableView setDoubleAction:@selector(doubleClicked)];
-	
-	self.requestStream = [FDRequest initWithString:[NSString stringWithFormat:@"%@/messages", self.flow.url] withBlock:^(NSObject *object, NSError *error){
-		
-	} forStreaming:YES ];
+
+	[self fetchMessages];
 }
 
 -(void)populateUsers
@@ -183,30 +229,4 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 	return v;
 	//[self.view addSubview:v];
 }
-
--(void)fetchMessages
-{
-	NSString *url = [NSString stringWithFormat:@"%@/messages", self.flow.url];
-
-	[FDRequest initWithString:url withBlock:^(NSObject* o, NSError *error) {
-		NSArray *array = (NSArray*)o;
-		NSMutableArray *msgs = [[NSMutableArray alloc] init];
-		for( NSDictionary *d in array ) {
-			NSString *event = [d valueForKey:@"event"];
-			if( [event isEqualToString:@"message"]) {
-				FDMessage *msg = [[FDMessage alloc] init];
-				[msg parseJSON:d];
-				NSLog(@"%@", msg.content);
-				[msgs addObject:msg];
-				//[self makeChatCell:msg];
-			}
-		}
-
-		[self.messages addObjectsFromArray:msgs];
-		[self.chatTableView reloadData];
-		[self.chatTableView scrollRowToVisible:[self.messages count] -1 ];
-	}];
-}
-
-
 @end
