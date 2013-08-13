@@ -56,8 +56,13 @@
 
 -(void)fetchMessages
 {
+	BOOL stream = [self.messages count] != 0;
 	NSString *url;
-	if( self.lastMessageID) {
+
+	if( stream ) {
+		url = [NSString stringWithFormat:@"%@", self.flow.url];
+	}
+	else if( self.lastMessageID) {
 		url = [NSString stringWithFormat:@"%@/messages?limit=100&since_id=%@", self.flow.url, self.lastMessageID];
 	} else {
 		url = [NSString stringWithFormat:@"%@/messages?limit=100", self.flow.url];
@@ -67,27 +72,26 @@
 		NSMutableArray *msgs = [[NSMutableArray alloc] init];
 
 		if( [object isKindOfClass:[NSDictionary class]]) {
-			// one item
-
 			NSDictionary *dict = (NSDictionary*)object;
-
 			if( [dict[@"event"] isEqualToString:@"message"]) {
 				FDMessage *msg = [[FDMessage alloc] init];
 				[msg parseJSON:dict];
-				NSLog(@"%@", msg.content);
 				[msgs addObject:msg];
 
 			}
 		} else {
 			NSArray *array = (NSArray*)object;
 			for( NSDictionary *d in array ) {
-				NSString *event = [d valueForKey:@"event"];
+				NSString *event = d[@"event"];
 				if( [event isEqualToString:@"message"]) {
 					FDMessage *msg = [[FDMessage alloc] init];
 					[msg parseJSON:d];
 					[msgs addObject:msg];
 					self.lastMessageID = msg.msgID;
 					//[self makeChatCell:msg];
+				}
+				else {
+					NSLog(@"%@",d[@"event"]);
 				}
 			}
 
@@ -99,8 +103,9 @@
 
 
 		}
-		[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
-	} forStreaming:NO ];
+		if(!stream)
+			[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
+	} forStreaming:stream];
 
 }
 
@@ -184,9 +189,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		NSAttributedString *str = [self parseMessageContent:msg];
 
 		NSRect bounds = [str boundingRectWithSize: NSMakeSize(tableView.bounds.size.width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
-		//v.frame = NSMakeRect(0, 0, v.bounds.size.width + 20, bounds.size.height + 20);
-		//[//v.textView.layoutManager ensureLayoutForTextContainer:v.textView.textContainer];
-
+	
 		return bounds.size.height + 10;
 
 	}

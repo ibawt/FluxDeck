@@ -82,23 +82,35 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
 {
+	if( [data length] == 1 && ((char*)data.bytes)[0] == '\n') {
+		return;
+	}
 	if( self.data == nil ) {
 		self.data = [[NSMutableData alloc] initWithData:data];
 	} else {
+
 		[self.data appendData:data];
 
 		if( self.isStreaming ) {
-			const uint8_t *bytes = self.data.bytes;
-			for( int i = (int)self.data.length - 1 ; i >= 0 ; --i ) {
-				if( bytes[i] == '\r' ) {
-					NSData *d = [NSData dataWithBytesNoCopy:(void*)self.data.bytes length:i-1];
+			const uint8_t *left = self.data.bytes;
+			const uint8_t *right = left;
+			int bytesWritten = 0;
+			for( int i = 0; i < self.data.length ; ++i ) {
+				if( *right == '\r' ) {
+					NSData *d = [NSData dataWithBytes:(void*)left length:(right - left)];
+					bytesWritten += right - left;
+					left = right + 1;
+					right += 2;
 					NSError *error = nil;
 					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:0 error:&error];
-					self.callback(o, error);
-					NSLog(@"in here?");
-					[self.data setLength:0];
+					if( o ) {
+						self.callback(o, error);
+					}
+				} else {
+					right++;
 				}
 			}
+			self.data = [[NSMutableData alloc] initWithBytes:self.data.bytes + bytesWritten length:self.data.length -bytesWritten];
 		}
 	}
 
