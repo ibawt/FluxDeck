@@ -71,15 +71,21 @@
 	self.requestStream = [FDRequest initWithString:url withBlock:^(NSObject *object, NSError *error){
 		[self.chatTableView beginUpdates];
 		if( [object isKindOfClass:[NSDictionary class]]) {
-			[self.messages addObject:object];
+			NSDictionary *d = (NSDictionary*)object;
+			if( [d[@"event"] isEqualToString:@"activity.user" ]) {
+				
+			} else {
+				[self.messages addObject:object];
+			}
 		} else {
 			[self.messages addObjectsFromArray:(NSArray*)object];
-			[self.chatTableView endUpdates];
-			[self.chatTableView reloadData];
-			[self.chatTableView scrollRowToVisible:[self.messages count] -1 ];
 		}
-		if(!stream)
+		[self.chatTableView endUpdates];
+		[self.chatTableView reloadData];
+		if( !stream ) {
+			[self.chatTableView scrollRowToVisible:[self.messages count] -1 ];
 			[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
+		}
 	} forStreaming:stream];
 
 }
@@ -89,7 +95,7 @@
 	_flow = flow;
 	//[self fetchMessages];
 	[self populateUsers];
-	[self.chatTableView setDoubleAction:@selector(doubleClicked)];
+	//[self.chatTableView setDoubleAction:@selector(doubleClicked)];
 
 	[self fetchMessages];
 }
@@ -137,16 +143,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	if( tableView == self.chatTableView ) {
 		NSMutableDictionary *msg = [self.messages objectAtIndex:row];
-		if( !msg[@"view"] ) {
-			 NSView * v = [self makeChatCell:msg];
-			if( v )
-				msg[@"view"] = v;
-			return v;
-		} else {
-			NSView *v = msg[@"view"];
-			[v setNeedsDisplay:YES];
-		}
-		return msg[@"view"];
+		return [self makeChatCell:msg withTableView:tableView];
 	} else if( tableView == self.userTableView ) {
 		NSTableCellView *cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
 		NSDictionary *users = [FluxDeckViewController instance].users;
@@ -185,21 +182,22 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 	return 40;
 }
 
--(NSView*)makeChatCell:(NSDictionary*)msg
+-(NSView*)makeChatCell:(NSDictionary*)msg withTableView:(NSTableView*)tableView
 {
-	NSArray *objs = nil;
-
 	if( [msg[@"event"] isEqualToString:@"message"] ) {
-		[[NSBundle mainBundle] loadNibNamed:@"ChatLineView" owner:self topLevelObjects:&objs];
+		NSArray *objs = nil;
+		FDChatLineView *v = [tableView makeViewWithIdentifier:@"MessageCell" owner:self];
+		if( !v ) {
+			[[NSBundle mainBundle] loadNibNamed:@"ChatLineView" owner:self topLevelObjects:&objs];
 
-		FDChatLineView *v = nil;
-		for( NSObject *o in objs ) {
-			if( [o class]  == [FDChatLineView class] ) {
-				v = (FDChatLineView*)o;
-				break;
+			for( NSObject *o in objs ) {
+				if( [o class]  == [FDChatLineView class] ) {
+					v = (FDChatLineView*)o;
+					break;
+				}
 			}
+			v.identifier = @"MessageCell";
 		}
-
 		NSAssert( v != nil, @"Can't find view in nib");
 		[v setFrameSize:NSMakeSize(self.chatTableView.frame.size.width, 60 )];
 		NSAttributedString *str = [self parseMessageContent:msg];
@@ -209,11 +207,17 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		v.frame = NSMakeRect(0, 0, width + 20, bounds.size.height + 20);
 		return v;
 	} else if( [msg[@"event"] isEqualToString:@"file"] ) {
-		NSImageView *iv = [[NSImageView alloc] init];
-		[FDImageCache getDataForURL:[NSString stringWithFormat:@"https://api.flowdock.com/%@", msg[@"content"][@"path"] ]onComplete:^(NSData *data, NSError *error){
-			iv.image = [[NSImage alloc] initWithData:data];
-		 }];
-		return iv;
+		if( msg[@"content"][@"image"] ) {
+			NSImageView *iv = [tableView makeViewWithIdentifier:@"ImageCell" owner:self];
+			if( iv == nil ) {
+				iv = [[NSImageView alloc] init];
+				iv.identifier = @"ImageCell";
+			}
+			[FDImageCache getDataForURL:[NSString stringWithFormat:@"https://api.flowdock.com/%@", msg[@"content"][@"path"] ]onComplete:^(NSData *data, NSError *error){
+				iv.image = [[NSImage alloc] initWithData:data];
+			}];
+			return iv;
+		}
 
 	}
 	return nil;
