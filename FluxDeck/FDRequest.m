@@ -102,7 +102,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 					left = right + 1;
 					right += 2;
 					NSError *error = nil;
-					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:0 error:&error];
+					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:NSJSONReadingMutableContainers error:&error];
 					if( o ) {
 						self.callback(o, error);
 					}
@@ -120,7 +120,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 {
 	NSError *error = nil;
 
-	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:0 error:&error];
+	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:NSJSONReadingMutableContainers error:&error];
 	self.isActive = false;
 	self.callback(obj, nil);
 }

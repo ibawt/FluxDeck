@@ -32,11 +32,11 @@
 }
 
 
--(NSAttributedString*)parseMessageContent:(FDMessage*)fd
+-(NSAttributedString*)parseMessageContent:(NSDictionary*)fd
 {
 	NSError *error = nil;
 
-	NSString *str = fd.content;
+	NSString *str = fd[@"content"];
 
 	NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:(NSTextCheckingTypes)NSTextCheckingTypeLink error:&error];
 
@@ -69,39 +69,14 @@
 	}
 	
 	self.requestStream = [FDRequest initWithString:url withBlock:^(NSObject *object, NSError *error){
-		NSMutableArray *msgs = [[NSMutableArray alloc] init];
-
+		[self.chatTableView beginUpdates];
 		if( [object isKindOfClass:[NSDictionary class]]) {
-			NSDictionary *dict = (NSDictionary*)object;
-			if( [dict[@"event"] isEqualToString:@"message"]) {
-				FDMessage *msg = [[FDMessage alloc] init];
-				[msg parseJSON:dict];
-				[msgs addObject:msg];
-
-			}
+			[self.messages addObject:object];
 		} else {
-			NSArray *array = (NSArray*)object;
-			for( NSDictionary *d in array ) {
-				NSString *event = d[@"event"];
-				if( [event isEqualToString:@"message"]) {
-					FDMessage *msg = [[FDMessage alloc] init];
-					[msg parseJSON:d];
-					[msgs addObject:msg];
-					self.lastMessageID = msg.msgID;
-					//[self makeChatCell:msg];
-				}
-				else {
-					NSLog(@"%@",d[@"event"]);
-				}
-			}
-
-			[self.chatTableView beginUpdates];
-			[self.messages addObjectsFromArray:msgs];
+			[self.messages addObjectsFromArray:(NSArray*)object];
 			[self.chatTableView endUpdates];
 			[self.chatTableView reloadData];
 			[self.chatTableView scrollRowToVisible:[self.messages count] -1 ];
-
-
 		}
 		if(!stream)
 			[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
@@ -161,8 +136,17 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	if( tableView == self.chatTableView ) {
-		FDMessage *msg = [self.messages objectAtIndex:row];
-		return [self makeChatCell:msg];
+		NSMutableDictionary *msg = [self.messages objectAtIndex:row];
+		if( !msg[@"view"] ) {
+			 NSView * v = [self makeChatCell:msg];
+			if( v )
+				msg[@"view"] = v;
+			return v;
+		} else {
+			NSView *v = msg[@"view"];
+			[v setNeedsDisplay:YES];
+		}
+		return msg[@"view"];
 	} else if( tableView == self.userTableView ) {
 		NSTableCellView *cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
 		NSDictionary *users = [FluxDeckViewController instance].users;
@@ -185,41 +169,53 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 -(CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
 	if( tableView == self.chatTableView ) {
-		FDMessage* msg = [self.messages objectAtIndex:row];
-		NSAttributedString *str = [self parseMessageContent:msg];
+		NSDictionary* msg = [self.messages objectAtIndex:row];
+		if( [msg[@"event"] isEqualToString:@"message"] ) {
+			NSAttributedString *str = [self parseMessageContent:msg];
 
-		NSRect bounds = [str boundingRectWithSize: NSMakeSize(tableView.bounds.size.width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
+			NSRect bounds = [str boundingRectWithSize: NSMakeSize(tableView.bounds.size.width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
 	
-		return bounds.size.height + 10;
+			return bounds.size.height + 10;
+		} else if( [msg[@"event"] isEqualToString:@"file"] ) {
+			NSString *height = msg[@"content"][@"image"][@"height"];
+			return [height integerValue];
+		}
 
 	}
 	return 40;
 }
 
--(NSView*)makeChatCell:(FDMessage*)msg
+-(NSView*)makeChatCell:(NSDictionary*)msg
 {
 	NSArray *objs = nil;
 
-	[[NSBundle mainBundle] loadNibNamed:@"ChatLineView" owner:self topLevelObjects:&objs];
+	if( [msg[@"event"] isEqualToString:@"message"] ) {
+		[[NSBundle mainBundle] loadNibNamed:@"ChatLineView" owner:self topLevelObjects:&objs];
 
-	FDChatLineView *v = nil;
-	for( NSObject *o in objs ) {
-		if( [o class]  == [FDChatLineView class] ) {
-			v = (FDChatLineView*)o;
-			break;
+		FDChatLineView *v = nil;
+		for( NSObject *o in objs ) {
+			if( [o class]  == [FDChatLineView class] ) {
+				v = (FDChatLineView*)o;
+				break;
+			}
 		}
-	}
 
-	NSAssert( v != nil, @"Can't find view in nib");
-	[v setFrameSize:NSMakeSize(self.chatTableView.frame.size.width, 60 )];
-	NSAttributedString *str = [self parseMessageContent:msg];
-	[[v textStorage] setAttributedString:str];
-	CGFloat width = self.chatTableView.bounds.size.width;
-	NSRect bounds = [str boundingRectWithSize: NSMakeSize(width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
-	v.frame = NSMakeRect(0, 0, width + 20, bounds.size.height + 20);
-	//[//v.textView.layoutManager ensureLayoutForTextContainer:v.textView.textContainer];
-	
-	return v;
-	//[self.view addSubview:v];
+		NSAssert( v != nil, @"Can't find view in nib");
+		[v setFrameSize:NSMakeSize(self.chatTableView.frame.size.width, 60 )];
+		NSAttributedString *str = [self parseMessageContent:msg];
+		[[v textStorage] setAttributedString:str];
+		CGFloat width = self.chatTableView.bounds.size.width;
+		NSRect bounds = [str boundingRectWithSize: NSMakeSize(width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
+		v.frame = NSMakeRect(0, 0, width + 20, bounds.size.height + 20);
+		return v;
+	} else if( [msg[@"event"] isEqualToString:@"file"] ) {
+		NSImageView *iv = [[NSImageView alloc] init];
+		[FDImageCache getDataForURL:[NSString stringWithFormat:@"https://api.flowdock.com/%@", msg[@"content"][@"path"] ]onComplete:^(NSData *data, NSError *error){
+			iv.image = [[NSImage alloc] initWithData:data];
+		 }];
+		return iv;
+
+	}
+	return nil;
 }
 @end
