@@ -100,21 +100,24 @@ static dispatch_queue_t queue = NULL;
 	if(![FDImageCache isInCache:url] ) {
 		NSData *data = [FDImageCache getFileFromDisk:url];
 		if( data ) {
-			[[FDImageCache instance].cache setValue:data forKey:url];
+			//[[FDImageCache instance].cache setValue:data forKey:url];
 			if( callback ) {
 				callback(data,nil);
 			}
 			return data;
 		}
+		NSURL *nsurl = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
 		NSLog(@"sending request for %@", url);
 		dispatch_async(queue, ^{
 			NSURLResponse *resp = nil;
 			NSError *error = nil;
-			NSData *data = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
-												 returningResponse:&resp error:&error];
-			[[FDImageCache instance].cache setObject:data forKey:url];
-			[data writeToFile:base64String(url) atomically:NO];
+			NSData *data = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:nsurl ]												 returningResponse:&resp error:&error];
+
+			if( !error ) {
+				//[[FDImageCache instance].cache setObject:data forKey:url];
+				[data writeToFile:base64String(url) atomically:NO];
+			}
 
 			if( callback ) {
 				callback( data, error);

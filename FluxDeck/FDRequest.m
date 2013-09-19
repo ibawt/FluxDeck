@@ -31,6 +31,26 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	return [FDRequest initWithString:url withBlock:block forStreaming:NO];
 }
 
++(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block withData:(NSData*)data
+{
+	FDRequest *req = [[FDRequest alloc] init];
+	req.isStreaming = NO;
+	req.callback = block;
+
+	NSURL *nsurl = [NSURL URLWithString:url];
+
+	NSMutableURLRequest *urlReq = [NSMutableURLRequest requestWithURL:nsurl];
+	[urlReq setHTTPBody:data];
+	[urlReq setHTTPMethod:@"POST"];
+	[urlReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	NSString *length = [NSString stringWithFormat:@"%ld",data.length];
+	[urlReq setValue:length forHTTPHeaderField:@"Content-Length"];
+
+	NSURLConnection *urlConn = [[NSURLConnection alloc] initWithRequest:urlReq delegate:req];
+	[urlConn start];
+
+	return req;
+}
 
 +(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block forStreaming:(BOOL)streaming
 {
@@ -123,6 +143,8 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:NSJSONReadingMutableContainers error:&error];
 	self.isActive = false;
 	self.callback(obj, nil);
+	self.callback = nil;
+	self.data = nil;
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

@@ -19,4 +19,5 @@
 @property (strong) IBOutlet NSString    *lastMessageID;
 @property (nonatomic,strong) FDFlow *flow;
 @property (nonatomic,strong) NSMutableArray *messages;
+@property (nonatomic, strong) NSMutableArray *influx;
 @end

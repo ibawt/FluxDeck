@@ -21,4 +21,13 @@
 	[self.window.contentView addSubview:self.viewController.view];
 	self.viewController.view.frame = ((NSView*)self.window.contentView).bounds;
 }
+
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
+{
+	if( !flag ) {
+		[self.window makeKeyAndOrderFront:self];
+	}
+	return YES;
+}
+
 @end

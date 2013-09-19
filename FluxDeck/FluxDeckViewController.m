@@ -83,10 +83,12 @@ static FluxDeckViewController* instance = nil;
 			FDFlowViewController *viewController = [[FDFlowViewController alloc] initWithNibName:@"FDFlowViewController" bundle:nil];
 
 			[item setView:viewController.view];
+
 			[viewController setFlow:flow];
 			[self.viewControllers addObject:viewController];
 		}
 	}];
+
 }
 
 @end

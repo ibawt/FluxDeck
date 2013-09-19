@@ -14,6 +14,7 @@ typedef void (^FDRequestCallback)(NSObject *json, NSError *error);
 
 +(FDRequest*) initWithString:(NSString *)url withBlock:(FDRequestCallback)block;
 +(FDRequest*) initWithString:(NSString *)url withBlock:(FDRequestCallback)block	forStreaming:(BOOL)isStreaming;
++(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block withData:(NSData*)data;
 @property (nonatomic,strong) NSMutableData *data;
 @property (nonatomic,strong) NSDictionary* json;
 @property (nonatomic,strong) FDRequestCallback callback;

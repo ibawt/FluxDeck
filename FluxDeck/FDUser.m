@@ -26,7 +26,6 @@
 		self.disabled = [dict valueForKey:@"disabled"];
 		self.lastActivity = [dict valueForKey:@"last_activity"];
 		self.lastPing = [dict valueForKey:@"last_ping"];
-		[FDImageCache getDataForURL:self.avatar onComplete:nil];
 	}
 }
 @end

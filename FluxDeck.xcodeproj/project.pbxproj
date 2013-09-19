@@ -28,6 +28,10 @@
 		B537DDFB17B6BA7600052DD3 /* FDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDFA17B6BA7600052DD3 /* FDImageCache.m */; };
 		B537DE0617B903D500052DD3 /* ChatLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DE0517B903D500052DD3 /* ChatLineView.xib */; };
 		B537DE0917B905BE00052DD3 /* FDChatLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DE0817B905BE00052DD3 /* FDChatLineView.m */; };
+		B59AA59017BFCFA10021CB87 /* FDTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B59AA58F17BFCFA10021CB87 /* FDTextView.m */; };
+		B59AA59217C009580021CB87 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59AA59117C009580021CB87 /* AVFoundation.framework */; };
+		B59AA59417C00D010021CB87 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59AA59317C00D010021CB87 /* WebKit.framework */; };
+		B59AA59A17C00FA10021CB87 /* LBYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = B59AA59717C00FA10021CB87 /* LBYouTubeExtractor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +84,13 @@
 		B537DE0517B903D500052DD3 /* ChatLineView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatLineView.xib; sourceTree = "<group>"; };
 		B537DE0717B905BE00052DD3 /* FDChatLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDChatLineView.h; sourceTree = "<group>"; };
 		B537DE0817B905BE00052DD3 /* FDChatLineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDChatLineView.m; sourceTree = "<group>"; };
+		B59AA58E17BFCFA10021CB87 /* FDTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTextView.h; sourceTree = "<group>"; };
+		B59AA58F17BFCFA10021CB87 /* FDTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDTextView.m; sourceTree = "<group>"; };
+		B59AA59117C009580021CB87 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B59AA59317C00D010021CB87 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		B59AA59517C00FA10021CB87 /* LBYouTube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBYouTube.h; sourceTree = "<group>"; };
+		B59AA59617C00FA10021CB87 /* LBYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBYouTubeExtractor.h; sourceTree = "<group>"; };
+		B59AA59717C00FA10021CB87 /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +98,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B59AA59417C00D010021CB87 /* WebKit.framework in Frameworks */,
+				B59AA59217C009580021CB87 /* AVFoundation.framework in Frameworks */,
 				B537DDAA17B6516300052DD3 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,6 +119,8 @@
 		B537DD9D17B6516300052DD3 = {
 			isa = PBXGroup;
 			children = (
+				B59AA59317C00D010021CB87 /* WebKit.framework */,
+				B59AA59117C009580021CB87 /* AVFoundation.framework */,
 				B537DDAF17B6516300052DD3 /* FluxDeck */,
 				B537DDCC17B6516400052DD3 /* FluxDeckTests */,
 				B537DDA817B6516300052DD3 /* Frameworks */,
@@ -145,6 +160,9 @@
 		B537DDAF17B6516300052DD3 /* FluxDeck */ = {
 			isa = PBXGroup;
 			children = (
+				B59AA59517C00FA10021CB87 /* LBYouTube.h */,
+				B59AA59617C00FA10021CB87 /* LBYouTubeExtractor.h */,
+				B59AA59717C00FA10021CB87 /* LBYouTubeExtractor.m */,
 				B537DDDD17B6519D00052DD3 /* FluxDeck.entitlements */,
 				B537DDBB17B6516300052DD3 /* FDAppDelegate.h */,
 				B537DDBC17B6516300052DD3 /* FDAppDelegate.m */,
@@ -161,6 +179,8 @@
 				B537DDE817B66D7E00052DD3 /* FDFlow.m */,
 				B537DDF117B6837500052DD3 /* FDFlowViewController.h */,
 				B537DDF217B6837500052DD3 /* FDFlowViewController.m */,
+				B59AA58E17BFCFA10021CB87 /* FDTextView.h */,
+				B59AA58F17BFCFA10021CB87 /* FDTextView.m */,
 				B537DE0517B903D500052DD3 /* ChatLineView.xib */,
 				B537DE0717B905BE00052DD3 /* FDChatLineView.h */,
 				B537DE0817B905BE00052DD3 /* FDChatLineView.m */,
@@ -326,6 +346,8 @@
 				B537DDF817B68ED900052DD3 /* FDMessage.m in Sources */,
 				B537DDFB17B6BA7600052DD3 /* FDImageCache.m in Sources */,
 				B537DE0917B905BE00052DD3 /* FDChatLineView.m in Sources */,
+				B59AA59017BFCFA10021CB87 /* FDTextView.m in Sources */,
+				B59AA59A17C00FA10021CB87 /* LBYouTubeExtractor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
