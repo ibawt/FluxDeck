@@ -1,0 +1,7 @@
+platform :osx, '10.8'
+pod 'AFNetworking'
+pod 'TMCache'
+pod 'Mantle'
+pod 'FXKeychain'
+pod 'twitter-text-objc'
+pod 'Rebel'

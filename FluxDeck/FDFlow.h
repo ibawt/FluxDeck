@@ -7,17 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Mantle.h>
 
-@interface FDFlow : NSObject
-
--(void)fromJSON:(NSDictionary*)dict;
+@interface FDFlow : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSString *flowID;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *organization;
-@property (nonatomic, strong) NSString *unreadMentions;
-@property (nonatomic, strong) NSString *open;
-@property (nonatomic, strong) NSString *joined;
+@property (nonatomic, strong) NSNumber *unreadMentions;
+@property (nonatomic, strong) NSNumber *open;
+@property (nonatomic, strong) NSNumber *joined;
 @property (nonatomic, strong) NSString *url;
 @property (nonatomic, strong) NSString *webUrl;
 @property (nonatomic, strong) NSString *joinUrl;

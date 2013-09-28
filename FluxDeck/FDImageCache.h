@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AFURLResponseSerialization.h>
+
 
 @interface FDImageCache : NSObject
 
-+(NSData*)getDataForURL:(NSString*)url onComplete:( void (^)(NSData* data, NSError *error))callback;
-+(BOOL)isInCache:(NSString*)url;
++(void)getDataForURL:(NSString*)url onComplete:( void (^)(NSImage* data, NSError *error))callback;
 +(FDImageCache*)instance;
 
 @end

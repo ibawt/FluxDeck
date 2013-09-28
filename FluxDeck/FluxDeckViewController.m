@@ -11,6 +11,7 @@
 #import "FDFlow.h"
 #import "FDUser.h"
 #import "FDFlowViewController.h"
+#import "FDRequestManager.h"
 
 static FluxDeckViewController* instance = nil;
 
@@ -26,10 +27,8 @@ static FluxDeckViewController* instance = nil;
     if (self) {
 		instance = self;
 
-		self.users = [[NSMutableDictionary alloc] init];
 		self.flows = [[NSMutableDictionary alloc] init];
 		self.viewControllers = [[NSMutableArray alloc] init];
-        // Initialization code here.
     }
     
     return self;
@@ -45,50 +44,33 @@ static FluxDeckViewController* instance = nil;
 	[self getFlows];
 }
 
--(NSArray*)parseUsers:(NSArray*)users
-{
-	NSMutableArray *ids = [[NSMutableArray alloc] init];
-	for( NSDictionary* dict in users) {
-		FDUser *u = [[FDUser alloc] init];
-		[u updateFromJSON:dict];
-		[self.users setValue:u forKey:u.userID];
-		[ids addObject:u.userID];
-	}
-	return ids;
-}
-
-
 -(void)getFlows
 {
-	[FDRequest initWithString:@"/flows?users=1" withBlock:^(NSObject *o, NSError *error) {
-		NSArray *array = (NSArray*)o;
+	FDRequestManager *manager = [FDRequestManager manager];
+	
+	AFHTTPRequestOperation *operation = [manager GET:@"https://api.flowdock.com/flows" parameters:@{@"users":@"1"} success:^(AFHTTPRequestOperation* operation, id responseObject) {
 
-		for( NSDictionary *f in array ) {
-			FDFlow *flow = [[FDFlow alloc] init];
-			[flow fromJSON:f];
+		NSArray *jsonFlows = responseObject;
 
-			[self.flows setValue:flow forKey:flow.flowID];
-
-			NSArray *users = [f objectForKey:@"users"];
-			if( users ) {
-				NSArray *ids = [self parseUsers:users];
-				flow.users = ids;
+		for( NSDictionary *dict in jsonFlows) {
+			FDFlow* flow = [MTLJSONAdapter modelOfClass:FDFlow.class fromJSONDictionary:dict error:nil];
+			if( [flow.open boolValue] ) {
+				self.flows[flow.flowID] = flow;
+				NSTabViewItem *item = [[NSTabViewItem alloc] init];
+				item.label = flow.name;
+				FDFlowViewController *viewController = [[FDFlowViewController alloc] initWithNibName:@"FDFlowViewController" bundle:nil];
+				[self.viewControllers addObject:viewController];
+				[self.tabView addTabViewItem:item];
+				[item setView:viewController.view];
+				viewController.flow = flow;
 			}
-
-			NSTabViewItem *item = [[NSTabViewItem alloc] init];
-			item.label = flow.name;
-
-			[self.tabView addTabViewItem:item];
-
-			FDFlowViewController *viewController = [[FDFlowViewController alloc] initWithNibName:@"FDFlowViewController" bundle:nil];
-
-			[item setView:viewController.view];
-
-			[viewController setFlow:flow];
-			[self.viewControllers addObject:viewController];
 		}
+
+	} failure: ^(AFHTTPRequestOperation *operation, NSError* error) {
+		NSAssert(false, @"caught error in getting flows %@", error);
 	}];
 
+	[operation start];
 }
 
 @end

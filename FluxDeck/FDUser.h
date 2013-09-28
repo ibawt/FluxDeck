@@ -7,22 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Mantle.h>
 
+@interface FDUser : MTLModel<MTLJSONSerializing>
 
-@interface FDUser : NSObject<NSConnectionDelegate>
-
--(void)updateFromJSON:(NSObject *)json;
-
-@property (nonatomic,strong) NSString *userID;
-@property (nonatomic,strong) NSString *email;
+@property (nonatomic,copy) NSNumber *userID;
+@property (nonatomic,copy) NSString *email;
 @property (nonatomic,strong) NSString *nick;
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,strong) NSString *avatar;
 @property (nonatomic,strong) NSString *status;
-@property (nonatomic,strong) NSString*disabled;
-@property (nonatomic,strong) NSString *lastActivity;
-@property (nonatomic,strong) NSString *lastPing;
-@property (strong) NSImage *avatarImage;
+@property (nonatomic,strong) NSNumber *disabled;
+@property (nonatomic,strong) NSDate *lastActivity;
+@property (nonatomic,strong) NSDate *lastPing;
 @end
 
 

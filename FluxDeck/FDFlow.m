@@ -7,21 +7,29 @@
 //
 
 #import "FDFlow.h"
+#import "FDUser.h"
 
 @implementation FDFlow
 
--(void)fromJSON:(NSDictionary *)dict
++(NSDictionary*)JSONKeyPathsByPropertyKey
 {
-	self.flowID = [dict valueForKey:@"id"];
-	self.name = [dict valueForKey:@"name"];
-	self.organization = [dict valueForKey:@"organization"];
-	self.unreadMentions = [dict valueForKey:@"unread_mentions"];
-	self.open = [dict valueForKey:@"open"];
-	self.joined = [dict valueForKey:@"joined"];
-	self.url = [dict valueForKey:@"url"];
-	self.webUrl = [dict valueForKey:@"web_url"];
-	self.joinUrl = [dict valueForKey:@"join_url"];
-	self.accessMode = [dict valueForKey:@"access_mode"];
+	return @{ @"flowID" : @"id",
+			  @"name" : @"name",
+			  @"organization" : @"organization",
+			  @"unreadMentions" : @"unread_mentions",
+			  @"open" : @"open",
+			  @"joined" : @"joined",
+			  @"url" : @"url",
+			  @"webUrl" : @"web_url",
+			  @"join_url" : @"join_url",
+			  @"accessMode" : @"access_mode",
+			  @"users" : @"users"
+			  };
+}
+
++(NSValueTransformer*)usersJSONTransformer
+{
+	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:FDUser.class];
 }
 
 @end

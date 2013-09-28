@@ -10,25 +10,37 @@
 #import "FDRequest.h"
 #import "FDImageCache.h"
 #import "FluxDeckViewController.h"
+#import "FluxDeck.h"
 
 @implementation FDUser
 
--(void)updateFromJSON:(NSObject *)json
++(NSDictionary *)JSONKeyPathsByPropertyKey
 {
-	if( [json isKindOfClass:[NSDictionary class]]) {
-		NSDictionary *dict = (NSDictionary*)json;
-		self.userID = [NSString stringWithFormat:@"%@",[dict valueForKey:@"id"]];
-		self.email = [dict valueForKey:@"email"];
-		self.nick = [dict valueForKey:@"nick"];
-		self.name = [dict valueForKey:@"name"];
-		self.avatar = [dict valueForKey:@"avatar"];
-		self.status = [dict valueForKey:@"status"];
-		self.disabled = [dict valueForKey:@"disabled"];
-		self.lastActivity = [dict valueForKey:@"last_activity"];
-		self.lastPing = [dict valueForKey:@"last_ping"];
-	}
+	return @{
+			 @"userID" : @"id",
+			 @"email" : @"email",
+			 @"nick" : @"nick",
+			 @"name" : @"name",
+			 @"avatar" : @"avatar",
+			 @"status" : @"status",
+			 @"disabled" : @"disabled",
+			 @"lastActivity" : @"last_activity",
+			 @"lastPing" : @"last_ping"
+			 };
 }
+
++(NSValueTransformer*)lastActivityJSONTransformer
+{
+	return FDTimestampValueTransformer();
+}
+
++(NSValueTransformer*)lastPingJSONTransformer
+{
+	return FDTimestampValueTransformer();
+}
+
 @end
+
 
 
 FDUser *FDGetUserFromID(NSString *userID)

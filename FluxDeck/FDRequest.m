@@ -7,6 +7,7 @@
 //
 
 #import "FDRequest.h"
+#import <FXKeychain.h>
 
 static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
