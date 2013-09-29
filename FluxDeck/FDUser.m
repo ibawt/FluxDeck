@@ -39,6 +39,14 @@
 	return FDTimestampValueTransformer();
 }
 
+-(BOOL)isIdle
+{
+	static const NSTimeInterval kIDLE_MAX = 60*15;
+	NSTimeInterval idleTime = ABS([self.lastPing timeIntervalSinceNow]);
+
+	return idleTime > kIDLE_MAX;
+}
+
 @end
 
 

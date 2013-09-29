@@ -32,4 +32,11 @@
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:FDUser.class];
 }
 
+
+-(void)sortUsers
+{
+	[self.users sortUsingComparator:^(FDUser *u1, FDUser *u2) {
+		return [u2.lastActivity compare:u1.lastActivity];
+	}];
+}
 @end

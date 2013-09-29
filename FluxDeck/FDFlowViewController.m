@@ -17,6 +17,8 @@
 #import <WebKit/WebKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "FDRequestManager.h"
+#import "FDUserTableCellView.h"
+#include <math.h>
 
 #import "LBYouTube.h"
 
@@ -43,9 +45,19 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
   if (self) {
     self.messages = [[NSMutableArray alloc] init];
     self.influx = [[NSMutableArray alloc] init];
+
   }
     
   return self;
+}
+
+-(void)awakeFromNib
+{
+	self.chatTableView = [[RBLTableView alloc] initWithFrame:self.messageView.bounds];
+	RBLClipView *clipView = [[RBLClipView alloc] initWithFrame:self.messageView.bounds];
+	[self.messageView setContentView:clipView];
+	NSNib *nib = [[NSNib alloc] initWithNibNamed:@"FDUserTableCellView" bundle:[NSBundle mainBundle]];
+	[self.userTableView registerNib:nib forIdentifier:@"FDUserTableCellView"];
 }
 
 
@@ -97,7 +109,7 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
   return [[NSAttributedString alloc] initWithString:@""];
 }
 
--(void)fetchMessages
+-(void)fetchMessages:(NSDictionary*)options
 {
 	[[FDRequestManager manager] GET:self.flow.url parameters:@{ @"limit" : @"100" } success:^(AFHTTPRequestOperation *op, NSDictionary* response) {
 		
@@ -147,6 +159,7 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 	}
 	 */
 }
+
 
 -(void)parseEvent:(NSMutableDictionary*)event
 {
@@ -205,14 +218,15 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 
 -(void)setFlow:(FDFlow *)flow
 {
-  _flow = flow;
-  [self populateUsers];
-  [self fetchMessages];
+	_flow = flow;
+	[self.flow sortUsers];
+	[self populateUsers];
+	[self fetchMessages:nil];
 }
 
 -(void)populateUsers
 {
-  [self.userTableView reloadData];
+	[self.userTableView reloadData];
 }
 
 -(IBAction)textEntered:(id)sender
@@ -237,219 +251,234 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-  if( aTableView == self.chatTableView) {
-    return [self.messages count];
-  }
-  else if( aTableView == self.userTableView ) {
-    return [self.flow.users count];
-  }
-  else if( aTableView == self.influxTableView ) {
-    return self.influx.count;
-  }
-  NSAssert(true, @"Invalid table view sent to controller");
-  return -1;
+	if( aTableView == self.chatTableView) {
+		return [self.messages count];
+	}
+	else if( aTableView == self.userTableView ) {
+		return [self.flow.users count];
+	}
+	else if( aTableView == self.influxTableView ) {
+		return self.influx.count;
+	}
+	NSAssert(true, @"Invalid table view sent to controller");
+	return -1;
 }
 - (BOOL)tableView:(NSTableView *)aTableView
 shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-  return NO;
+	return NO;
 }
 
 -(IBAction)doubleClicked:(id)sender
 {
-	
+
 }
 
 
 -(BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
-  return NO;
+	return NO;
 }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-  if( tableView == self.chatTableView ) {
-    NSMutableDictionary *msg = [self.messages objectAtIndex:row];
-    return [self makeChatCell:msg withTableView:tableView withRow:row];
-  } else if( tableView == self.userTableView ) {
-    NSTableCellView *cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
-    NSDictionary *users = [FluxDeckViewController instance].users;
-    NSString *userID = [self.flow.users objectAtIndex:row];
-    FDUser *user = [users objectForKey:userID];
-    cell.textField.stringValue = user.nick;
+	if( tableView == self.chatTableView ) {
+		NSMutableDictionary *msg = [self.messages objectAtIndex:row];
+		return [self makeChatCell:msg withTableView:tableView withRow:row];
+	} else if( tableView == self.userTableView ) {
+		FDUserTableCellView *cell = [self.userTableView makeViewWithIdentifier:@"FDUserTableCellView" owner:self];
+		FDUser *user = self.flow.users[row];
+		cell.username.stringValue = user.nick;
+		NSTimeInterval time = ABS([user.lastActivity timeIntervalSinceNow]);
+		if( time > 60*60 ) {
+			cell.lastActivity.stringValue = [NSString stringWithFormat:@"%.2f hours", time / (60*60)];
+			// hours
+		} else if( time > 60 ) {
+			cell.lastActivity.stringValue = [NSString stringWithFormat:@"%d minutes", (int)(time / 60) ];
+		} else {
+			cell.lastActivity.stringValue = [NSString stringWithFormat:@"%d secs", (int)(time)];
+			// seconds
+		}
+		if( time >  60*60*8 ) {
+			cell.statusIcon.image = [NSImage imageNamed:NSImageNameStatusUnavailable];
+		}
+		else if( time > 60*15 ) {
+			cell.statusIcon.image = [NSImage imageNamed:NSImageNameStatusPartiallyAvailable];
+		} else {
+			cell.statusIcon.image = [NSImage imageNamed:NSImageNameStatusAvailable];
+		}
 
-    cell.toolTip = user.name;
+		[cell.username sizeToFit];
+		CGRect rect = cell.lastActivity.frame;
+		rect.origin.x = cell.username.frame.origin.x + cell.username.frame.size.width;
+		cell.lastActivity.frame = rect;
+		return cell;
+	} else if( tableView == self.influxTableView ) {
+		return [self makeChatCell:[self.influx objectAtIndex:row] withTableView:self.influxTableView withRow:row];
 
-//    [FDImageCache getDataForURL:user.avatar onComplete:^(NSData *data, NSError *error){
-//		cell.imageView.image = [[NSImage alloc] initWithData:data];
-//      }];
-    return cell;
-  } else if( tableView == self.influxTableView ) {
-    return [self makeChatCell:[self.influx objectAtIndex:row] withTableView:self.influxTableView withRow:row];
-
-  }
-  return nil;
+	}
+	return nil;
 }
 
 -(CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-  if( tableView == self.chatTableView ) {
-    NSDictionary* msg = [self.messages objectAtIndex:row];
+	if( tableView == self.chatTableView ) {
+		NSDictionary* msg = [self.messages objectAtIndex:row];
 
-    if( msg[@"youtube_link"]) {
-      return 256;
-    }
+		if( msg[@"youtube_link"]) {
+			return 256;
+		}
 
-    if( msg[@"textHeight"] ) {
-      return MAX(1,[(NSNumber*)msg[@"textHeight"] floatValue]);
-    }
-    if( [msg[@"event"] isEqualToString:@"message"] ) {
-		NSAttributedString *str = msg[@"attributedString"];
+		if( msg[@"textHeight"] ) {
+			return MAX(1,[(NSNumber*)msg[@"textHeight"] floatValue]);
+		}
+		if( [msg[@"event"] isEqualToString:@"message"] ) {
+			NSAttributedString *str = msg[@"attributedString"];
 
-      NSRect bounds = [str boundingRectWithSize: NSMakeSize(tableView.bounds.size.width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
+			NSRect bounds = [str boundingRectWithSize: NSMakeSize(tableView.bounds.size.width, 0) options: NSStringDrawingUsesLineFragmentOrigin];
 
-      return bounds.size.height + 15;
-    } else if( [msg[@"event"] isEqualToString:@"file"] ) {
-      NSString *height = msg[@"content"][@"image"][@"height"];
-      NSString *width = msg[@"content"][@"image"][@"width"];
-      NSSize size = NSMakeSize([width floatValue], [height floatValue]);
-      if( size.width > self.chatTableView.frame.size.width ) {
-		size.height = self.chatTableView.frame.size.width * size.height / size.width;
-      }
-      return MAX(1,size.height);
-    }
+			return bounds.size.height + 15;
+		} else if( [msg[@"event"] isEqualToString:@"file"] ) {
+			NSString *height = msg[@"content"][@"image"][@"height"];
+			NSString *width = msg[@"content"][@"image"][@"width"];
+			NSSize size = NSMakeSize([width floatValue], [height floatValue]);
+			if( size.width > self.chatTableView.frame.size.width ) {
+				size.height = self.chatTableView.frame.size.width * size.height / size.width;
+			}
+			return MAX(1,size.height);
+		}
 
-  } else if( tableView == self.influxTableView) {
-	  NSDictionary *msg = self.influx[row];
-	  if( msg[@"textHeight"] ) {
-		  return [msg[@"textHeight"] floatValue];
-	  } else {
-		  NSString *html = nil;
-		  NSMutableDictionary *msg = [self.influx objectAtIndex:row];
-		  if( [msg[@"event"] isEqualToString:@"vcs"] ) {
-			  html = @"vcs";
-		  }else {
-			  NSDictionary *m = msg[@"content"];
-			  html = m[@"content"];
-		  }
-		  if( !html ) {
-			  html = @"";
-		  }
-		  NSAttributedString *attrString = makeAttributeStringFromHTML(html);
+	} else if( tableView == self.influxTableView) {
+		NSDictionary *msg = self.influx[row];
+		if( msg[@"textHeight"] ) {
+			return [msg[@"textHeight"] floatValue];
+		} else {
+			NSString *html = nil;
+			NSMutableDictionary *msg = [self.influx objectAtIndex:row];
+			if( [msg[@"event"] isEqualToString:@"vcs"] ) {
+				html = @"vcs";
+			}else {
+				NSDictionary *m = msg[@"content"];
+				html = m[@"content"];
+			}
+			if( !html ) {
+				html = @"";
+			}
+			NSAttributedString *attrString = makeAttributeStringFromHTML(html);
 
-		  msg[@"attributedString"] = attrString;
-		  NSRect bounds = [attrString boundingRectWithSize:NSMakeSize(tableView.bounds.size.width, 0) options:NSStringDrawingUsesLineFragmentOrigin];
-		  bounds.size.height = MIN(256, bounds.size.height );
-		  msg[@"textHeight"] = [NSNumber numberWithFloat:bounds.size.height+15];
-		  return bounds.size.height + 15;
+			msg[@"attributedString"] = attrString;
+			NSRect bounds = [attrString boundingRectWithSize:NSMakeSize(tableView.bounds.size.width, 0) options:NSStringDrawingUsesLineFragmentOrigin];
+			bounds.size.height = MIN(256, bounds.size.height );
+			msg[@"textHeight"] = [NSNumber numberWithFloat:bounds.size.height+15];
+			return bounds.size.height + 15;
+		}
 	}
-  }
-  return 40;
+	return 22;
 }
 
 -(NSView*)makeChatCell:(NSMutableDictionary*)msg withTableView:(NSTableView*)tableView withRow:(NSInteger)row
 {
-  if( tableView == self.influxTableView ) {
-	  NSView *uberCell = [[NSView alloc] init];
-    FDTextView *cell = nil;
-	//NSLog(@"%@", msg.description);
-    cell = [tableView makeViewWithIdentifier:@"TextChatCell" owner:self];
-    if( cell == nil ) {
-      cell = [[FDTextView alloc] initWithFrame:NSMakeRect(0, 0, self.influxTableView.bounds.size.width, 0)];
-      [cell setHorizontallyResizable:NO];
-      cell.identifier = @"TextChatCell";
-    }
-    NSAttributedString *attr = nil;
-
-    if( [msg[@"event"] isEqualToString:@"vcs"]) {
-      attr = [[NSAttributedString alloc] initWithString:@"vcs"];
-    } else {
-		NSDictionary *content = msg[@"content"];
-		NSDictionary *from = content[@"from"][0];
-
-		if( [from[@"address"] isEqualToString:@"build+ok@flowdock.com"])  {
-			NSImageView *iv = [[NSImageView alloc] init];
-//			[FDImageCache getDataForURL:kBUILDOK_ICON onComplete:^(NSData *data, NSError *error) {
-//				NSImage *image = [[NSImage alloc] initWithData:data];
-//				iv.image = image;
-//			}
-//			 ];
-			[uberCell addSubview:iv];
-			//return uberCell;
+	if( tableView == self.influxTableView ) {
+		NSView *uberCell = [[NSView alloc] init];
+		FDTextView *cell = nil;
+		//NSLog(@"%@", msg.description);
+		cell = [tableView makeViewWithIdentifier:@"TextChatCell" owner:self];
+		if( cell == nil ) {
+			cell = [[FDTextView alloc] initWithFrame:NSMakeRect(0, 0, self.influxTableView.bounds.size.width, 0)];
+			[cell setHorizontallyResizable:NO];
+			cell.identifier = @"TextChatCell";
 		}
-		attr = msg[@"attributedString"];
+		NSAttributedString *attr = nil;
+
+		if( [msg[@"event"] isEqualToString:@"vcs"]) {
+			attr = [[NSAttributedString alloc] initWithString:@"vcs"];
+		} else {
+			NSDictionary *content = msg[@"content"];
+			NSDictionary *from = content[@"from"][0];
+
+			if( [from[@"address"] isEqualToString:@"build+ok@flowdock.com"])  {
+				NSImageView *iv = [[NSImageView alloc] init];
+				//			[FDImageCache getDataForURL:kBUILDOK_ICON onComplete:^(NSData *data, NSError *error) {
+				//				NSImage *image = [[NSImage alloc] initWithData:data];
+				//				iv.image = image;
+				//			}
+				//			 ];
+				[uberCell addSubview:iv];
+				//return uberCell;
+			}
+			attr = msg[@"attributedString"];
+		}
+
+		[cell.textStorage setAttributedString:attr];
+		[cell sizeToFit];
+		[cell setTextContainerInset:NSMakeSize(3, 3)];
+		[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+		msg[@"textHeight"] = [NSNumber numberWithFloat:cell.frame.size.height];
+
+		return cell;
+
 	}
+	else if( [msg[@"event"] isEqualToString:@"message"] ) {
 
-    [cell.textStorage setAttributedString:attr];
-    [cell sizeToFit];
-    [cell setTextContainerInset:NSMakeSize(3, 3)];
-    [tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-    msg[@"textHeight"] = [NSNumber numberWithFloat:cell.frame.size.height];
-	
-	  return cell;
+		if( [msg[@"content"] hasSuffix:@"png"]  || [msg[@"content"] rangeOfString:@".gif"].length > 0) {
+			NSImageView *iv = [tableView makeViewWithIdentifier:@"ImageCell" owner:self];
+			if( iv == nil ) {
+				iv = [[NSImageView alloc] init];
+				iv.identifier = @"ImageCell";
+			}
+			if( msg[@"cached_image"] ) {
+				iv.image = msg[@"cached_image"];
+			} else {
+				//			  [FDImageCache getDataForURL:msg[@"content"] onComplete:^(NSData *data, NSError *error){
+				//				  if( data ) {
+				//					  NSImage *image = [[NSImage alloc] initWithData:data];
+				//					  iv.image = image;
+				//					  msg[@"textHeight"] = [NSNumber numberWithFloat:iv.image.size.height];
+				//					  [tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+				//				  }
+				//
+				//		  }];
+			}
 
-  }
-  else if( [msg[@"event"] isEqualToString:@"message"] ) {
+			return iv;
+		}
+		if( msg[@"youtube_link"] ) {
+			NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, self.chatTableView.frame.size.width, 256)];
+			[view setWantsLayer:YES];
+			AVPlayer *av = [AVPlayer playerWithURL:msg[@"youtube_link"]];
+			AVPlayerLayer *avp = [AVPlayerLayer playerLayerWithPlayer:av];
+			[avp setFrame:view.frame];
+			[view.layer addSublayer:avp];
+			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+			return view;
+		}
+		FDTextView *cell = nil;
+		cell = [tableView makeViewWithIdentifier:@"TextChatCell" owner:self];
+		if( cell == nil ) {
+			cell = [[FDTextView alloc] initWithFrame:NSMakeRect(0, 0, self.chatTableView.bounds.size.width, 0)];
+			[cell setHorizontallyResizable:NO];
+			cell.identifier = @"TextChatCell";
+		}
+		NSAttributedString *attr = msg[@"attributedString"];
+		[cell.textStorage setAttributedString:attr];
+		[cell sizeToFit];
+		[cell setTextContainerInset:NSMakeSize(7, 7)];
+		[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+		msg[@"textHeight"] = [NSNumber numberWithFloat:cell.frame.size.height];
 
-	  if( [msg[@"content"] hasSuffix:@"png"]  || [msg[@"content"] rangeOfString:@".gif"].length > 0) {
-		  NSImageView *iv = [tableView makeViewWithIdentifier:@"ImageCell" owner:self];
-		  if( iv == nil ) {
-			  iv = [[NSImageView alloc] init];
-			  iv.identifier = @"ImageCell";
-		  }
-		  if( msg[@"cached_image"] ) {
-			  iv.image = msg[@"cached_image"];
-		  } else {
-//			  [FDImageCache getDataForURL:msg[@"content"] onComplete:^(NSData *data, NSError *error){
-//				  if( data ) {
-//					  NSImage *image = [[NSImage alloc] initWithData:data];
-//					  iv.image = image;
-//					  msg[@"textHeight"] = [NSNumber numberWithFloat:iv.image.size.height];
-//					  [tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-//				  }
-//
-//		  }];
-		  }
+		return cell;
+	} else if( [msg[@"event"] isEqualToString:@"file"] ) {
+		if( msg[@"content"][@"image"] ) {
+			NSImageView *iv = [tableView makeViewWithIdentifier:@"ImageCell" owner:self];
+			if( iv == nil ) {
+				iv = [[NSImageView alloc] init];
+				iv.identifier = @"ImageCell";
+			}
+			//      [FDImageCache getDataForURL:[NSString stringWithFormat:@"https://api.flowdock.com/%@", msg[@"content"][@"path"] ]onComplete:^(NSData *data, NSError *error){
+			//		  iv.image = [[NSImage alloc] initWithData:data];
+			//		}];
+			return iv;
+		}
 
-		  return iv;
-	  }
-    if( msg[@"youtube_link"] ) {
-      NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, self.chatTableView.frame.size.width, 256)];
-      [view setWantsLayer:YES];
-      AVPlayer *av = [AVPlayer playerWithURL:msg[@"youtube_link"]];
-      AVPlayerLayer *avp = [AVPlayerLayer playerLayerWithPlayer:av];
-      [avp setFrame:view.frame];
-      [view.layer addSublayer:avp];
-      [tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-      return view;
-    }
-    FDTextView *cell = nil;
-    cell = [tableView makeViewWithIdentifier:@"TextChatCell" owner:self];
-    if( cell == nil ) {
-      cell = [[FDTextView alloc] initWithFrame:NSMakeRect(0, 0, self.chatTableView.bounds.size.width, 0)];
-      [cell setHorizontallyResizable:NO];
-      cell.identifier = @"TextChatCell";
-    }
-	NSAttributedString *attr = msg[@"attributedString"];
-    [cell.textStorage setAttributedString:attr];
-    [cell sizeToFit];
-    [cell setTextContainerInset:NSMakeSize(7, 7)];
-    [tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-    msg[@"textHeight"] = [NSNumber numberWithFloat:cell.frame.size.height];
-
-    return cell;
-  } else if( [msg[@"event"] isEqualToString:@"file"] ) {
-    if( msg[@"content"][@"image"] ) {
-      NSImageView *iv = [tableView makeViewWithIdentifier:@"ImageCell" owner:self];
-      if( iv == nil ) {
-		iv = [[NSImageView alloc] init];
-		iv.identifier = @"ImageCell";
-      }
-//      [FDImageCache getDataForURL:[NSString stringWithFormat:@"https://api.flowdock.com/%@", msg[@"content"][@"path"] ]onComplete:^(NSData *data, NSError *error){
-//		  iv.image = [[NSImage alloc] initWithData:data];
-//		}];
-      return iv;
-    }
-		
-  }
-  return nil;
+	}
+	return nil;
 }
 @end

@@ -8,13 +8,20 @@
 
 #import <Cocoa/Cocoa.h>
 #import "FDFlow.h"
+#import <Rebel.h>
 
-@interface FDFlowViewController : NSViewController<NSTableViewDataSource,NSTableViewDelegate>
+@interface FDFlowViewController : RBLViewController<NSTableViewDataSource,NSTableViewDelegate>
 
 -(IBAction)textEntered:(id)sender;
 
-@property (strong) IBOutlet NSTableView *chatTableView;
-@property (strong) IBOutlet NSTableView *userTableView;
+
+@property (nonatomic,strong) IBOutlet NSTextField *titleField;
+@property (nonatomic,strong) IBOutlet RBLView *inputView;
+@property (nonatomic,strong) IBOutlet RBLView *userView;
+@property (nonatomic,strong) IBOutlet RBLScrollView *messageView;
+@property (nonatomic,strong) IBOutlet RBLView *titleView;
+@property (strong) IBOutlet RBLTableView *chatTableView;
+@property (strong) IBOutlet RBLTableView *userTableView;
 @property (strong) IBOutlet NSTableView *influxTableView;
 @property (strong) IBOutlet NSString    *lastMessageID;
 @property (nonatomic,strong) FDFlow *flow;

@@ -21,6 +21,8 @@
 @property (nonatomic, strong) NSString *webUrl;
 @property (nonatomic, strong) NSString *joinUrl;
 @property (nonatomic, strong) NSString *accessMode;
-@property (nonatomic, strong) NSArray  *users;
+@property (nonatomic, strong) NSMutableArray  *users;
+
+-(void)sortUsers;
 
 @end

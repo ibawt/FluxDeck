@@ -20,6 +20,8 @@
 @property (nonatomic,strong) NSNumber *disabled;
 @property (nonatomic,strong) NSDate *lastActivity;
 @property (nonatomic,strong) NSDate *lastPing;
+
+-(BOOL)isIdle;
 @end
 
 

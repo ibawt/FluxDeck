@@ -31,10 +31,15 @@
 		B56EA72A17F734EB00A0FE80 /* FluxDeck.m in Sources */ = {isa = PBXBuildFile; fileRef = B56EA72917F734EB00A0FE80 /* FluxDeck.m */; };
 		B56EA72D17F741B300A0FE80 /* FDRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B56EA72C17F741B300A0FE80 /* FDRequestManager.m */; };
 		B56EA72F17F745C300A0FE80 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = B56EA72E17F745C300A0FE80 /* Podfile */; };
+		B56EA73417F7CD0E00A0FE80 /* FDFlowButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = B56EA73317F7CD0E00A0FE80 /* FDFlowButton.xib */; };
+		B56EA73717F7D0DD00A0FE80 /* FDFlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */; };
 		B59AA59017BFCFA10021CB87 /* FDTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B59AA58F17BFCFA10021CB87 /* FDTextView.m */; };
 		B59AA59217C009580021CB87 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59AA59117C009580021CB87 /* AVFoundation.framework */; };
 		B59AA59417C00D010021CB87 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59AA59317C00D010021CB87 /* WebKit.framework */; };
 		B59AA59A17C00FA10021CB87 /* LBYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = B59AA59717C00FA10021CB87 /* LBYouTubeExtractor.m */; };
+		B5AD8CD917F87947008FB926 /* FDTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD8CD817F87947008FB926 /* FDTitleView.m */; };
+		B5AD8CDB17F88C6B008FB926 /* FDUserTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5AD8CDA17F88C6B008FB926 /* FDUserTableCellView.xib */; };
+		B5AD8CDE17F89039008FB926 /* FDUserTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD8CDD17F89039008FB926 /* FDUserTableCellView.m */; };
 		C5687533860C4E81BD237FA3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1BF4B90F0C4257B92F5C34 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -95,6 +100,9 @@
 		B56EA72B17F741B300A0FE80 /* FDRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRequestManager.h; sourceTree = "<group>"; };
 		B56EA72C17F741B300A0FE80 /* FDRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRequestManager.m; sourceTree = "<group>"; };
 		B56EA72E17F745C300A0FE80 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		B56EA73317F7CD0E00A0FE80 /* FDFlowButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDFlowButton.xib; sourceTree = "<group>"; };
+		B56EA73517F7D0DD00A0FE80 /* FDFlowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFlowButton.h; sourceTree = "<group>"; };
+		B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFlowButton.m; sourceTree = "<group>"; };
 		B59AA58E17BFCFA10021CB87 /* FDTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTextView.h; sourceTree = "<group>"; };
 		B59AA58F17BFCFA10021CB87 /* FDTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDTextView.m; sourceTree = "<group>"; };
 		B59AA59117C009580021CB87 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -102,6 +110,11 @@
 		B59AA59517C00FA10021CB87 /* LBYouTube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBYouTube.h; sourceTree = "<group>"; };
 		B59AA59617C00FA10021CB87 /* LBYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBYouTubeExtractor.h; sourceTree = "<group>"; };
 		B59AA59717C00FA10021CB87 /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
+		B5AD8CD717F87947008FB926 /* FDTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTitleView.h; sourceTree = "<group>"; };
+		B5AD8CD817F87947008FB926 /* FDTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDTitleView.m; sourceTree = "<group>"; };
+		B5AD8CDA17F88C6B008FB926 /* FDUserTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDUserTableCellView.xib; sourceTree = "<group>"; };
+		B5AD8CDC17F89039008FB926 /* FDUserTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDUserTableCellView.h; sourceTree = "<group>"; };
+		B5AD8CDD17F89039008FB926 /* FDUserTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDUserTableCellView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,8 +274,16 @@
 				B59AA58E17BFCFA10021CB87 /* FDTextView.h */,
 				B59AA58F17BFCFA10021CB87 /* FDTextView.m */,
 				B537DDF317B6837500052DD3 /* FDFlowViewController.xib */,
+				B56EA73317F7CD0E00A0FE80 /* FDFlowButton.xib */,
 				B537DE0817B905BE00052DD3 /* FDChatLineView.m */,
 				B537DDBE17B6516400052DD3 /* MainMenu.xib */,
+				B56EA73517F7D0DD00A0FE80 /* FDFlowButton.h */,
+				B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */,
+				B5AD8CD717F87947008FB926 /* FDTitleView.h */,
+				B5AD8CD817F87947008FB926 /* FDTitleView.m */,
+				B5AD8CDA17F88C6B008FB926 /* FDUserTableCellView.xib */,
+				B5AD8CDC17F89039008FB926 /* FDUserTableCellView.h */,
+				B5AD8CDD17F89039008FB926 /* FDUserTableCellView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -343,11 +364,13 @@
 			files = (
 				B537DDB417B6516300052DD3 /* InfoPlist.strings in Resources */,
 				B537DDBA17B6516300052DD3 /* Credits.rtf in Resources */,
+				B5AD8CDB17F88C6B008FB926 /* FDUserTableCellView.xib in Resources */,
 				B537DDC017B6516400052DD3 /* MainMenu.xib in Resources */,
 				B537DDF017B677B700052DD3 /* FluxDeckViewController.xib in Resources */,
 				B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */,
 				B56EA72F17F745C300A0FE80 /* Podfile in Resources */,
 				B537DE0617B903D500052DD3 /* ChatLineView.xib in Resources */,
+				B56EA73417F7CD0E00A0FE80 /* FDFlowButton.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,9 +446,12 @@
 				B56EA72A17F734EB00A0FE80 /* FluxDeck.m in Sources */,
 				B537DDFB17B6BA7600052DD3 /* FDImageCache.m in Sources */,
 				B537DE0917B905BE00052DD3 /* FDChatLineView.m in Sources */,
+				B56EA73717F7D0DD00A0FE80 /* FDFlowButton.m in Sources */,
 				B56EA72D17F741B300A0FE80 /* FDRequestManager.m in Sources */,
 				B59AA59017BFCFA10021CB87 /* FDTextView.m in Sources */,
 				B59AA59A17C00FA10021CB87 /* LBYouTubeExtractor.m in Sources */,
+				B5AD8CD917F87947008FB926 /* FDTitleView.m in Sources */,
+				B5AD8CDE17F89039008FB926 /* FDUserTableCellView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

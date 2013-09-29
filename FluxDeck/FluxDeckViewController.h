@@ -7,13 +7,15 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Rebel.h>
 
-@interface FluxDeckViewController : NSViewController<NSTabViewDelegate>
+@interface FluxDeckViewController : RBLViewController
 -(void)getFlows;
 +(FluxDeckViewController*)instance;
-
-
-@property (nonatomic,strong) IBOutlet NSTabView *tabView;
+@property (nonatomic,strong) NSMutableArray *flowButtons;
+@property (nonatomic,strong) IBOutlet RBLView* tabView;
+@property (nonatomic,strong) IBOutlet RBLView* flowView;
+@property (nonatomic,strong) IBOutlet NSButton* flowSettings;
 @property (nonatomic,strong) NSMutableDictionary *users;
 @property (nonatomic,strong) NSMutableDictionary *flows;
 @property (nonatomic,strong) NSMutableArray *viewControllers;
