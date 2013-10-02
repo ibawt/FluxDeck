@@ -18,6 +18,19 @@
     return self;
 }
 
+-(void)awakeFromNib
+{
+	[self.button setAction:@selector(buttonPushed:)];
+	[self.button setTarget:self];
+}
+
+-(void)buttonPushed:(id)sender
+{
+	if( self.callback ) {
+		self.callback();
+	}
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
 	[super drawRect:dirtyRect];

@@ -100,6 +100,12 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	[challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
 }
 
+-(BOOL)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse
+{
+	//return !self.isStreaming;
+	return NO;
+}
+
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
 {
 	if( [data length] == 1 && ((char*)data.bytes)[0] == '\n') {

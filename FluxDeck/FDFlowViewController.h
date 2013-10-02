@@ -25,5 +25,6 @@
 @property (nonatomic,strong) FDFlow *flow;
 @property (nonatomic,strong) NSMutableArray *messages;
 @property (nonatomic,strong) NSMutableArray *influx;
+@property (nonatomic,assign) BOOL onScreen;
 
 @end

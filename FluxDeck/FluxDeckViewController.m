@@ -41,8 +41,19 @@ static FluxDeckViewController* instance = nil;
 	[self getFlows];
 }
 
--(void)selectFlow:(NSInteger)index
+-(void)selectFlow:(FDFlow*)flow
 {
+	int index = -1;
+	for( int i = 0 ; i < self.viewControllers.count ; ++i) {
+		FDFlowViewController *vc = self.viewControllers[i];
+
+		if( vc.flow == flow ) {
+			vc.onScreen = YES;
+			index = i;
+		} else {
+			vc.onScreen = NO;
+		}
+	}
 	if( self.flowView.subviews.count > 0 )
 		[self.flowView.subviews[0] removeFromSuperview];
 
@@ -96,9 +107,13 @@ static FluxDeckViewController* instance = nil;
 					rect.origin.x = x;
 					x += rect.size.width;
 					fb.frame = rect;
+
+					fb.callback = ^(void) {
+						[self selectFlow:flow];
+					};
 				}
 			}
-			[self selectFlow:0];
+			[self selectFlow:[self.viewControllers[0] flow]];
 
 		}
 	}];

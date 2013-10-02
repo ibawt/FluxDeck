@@ -17,6 +17,14 @@ static const NSString *kFDSymbol = @"Symbol";
 
 @implementation FDMessage
 
+-(id)init
+{
+	if( self = [super init] ) {
+		self.rowHeightCache = [[NSMutableDictionary alloc] init];
+	}
+	return self;
+}
+
 +(NSDictionary*)JSONKeyPathsByPropertyKey
 {
 	return @{
@@ -94,6 +102,19 @@ static const NSString *kFDSymbol = @"Symbol";
 	}
 
 	self.displayString = ds;
+}
+
+-(CGFloat)rowHeightForWidth:(CGFloat)width
+{
+	NSNumber *number = [NSNumber numberWithFloat:width];
+	NSNumber *height = self.rowHeightCache[number];
+
+	if( height == nil ) {
+		NSRect rect = [self.displayString boundingRectWithSize:NSMakeSize(width, 0) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)];
+		height = [NSNumber numberWithFloat:rect.size.height + 3];
+		self.rowHeightCache[number] = height;
+	}
+	return [height floatValue];
 }
 
 +(NSValueTransformer*)sentJSONTransformer {

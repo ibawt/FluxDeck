@@ -60,6 +60,7 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 {
 	[[FDFlowViewController queue] addOperationWithBlock:^(void) {
 		NSMutableArray *parsedMessages = [[NSMutableArray alloc] init];
+		NSUInteger start = self.messages.count;
 		for( NSDictionary *d in messages ) {
 			FDMessage *msg = [MTLJSONAdapter modelOfClass:FDMessage.class fromJSONDictionary:d error:nil];
 
@@ -89,20 +90,45 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 				}
 			}
 		}
-		[[NSOperationQueue mainQueue] addOperationWithBlock:^(void){
-			[self.chatTableView beginUpdates];
-			[self.messages addObjectsFromArray:parsedMessages];
-			[self.chatTableView endUpdates];
-			[self.chatTableView reloadData];
+		if( parsedMessages.count > 0 ) {
+			self.lastMessageID = [[parsedMessages objectAtIndex:parsedMessages.count-1] msgID];
+
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^(void){
+			if( self.onScreen ) {
+				NSLog(@"on screen updating: %@", self.flow.name);
+				[self.chatTableView beginUpdates];
+				[self.messages addObjectsFromArray:parsedMessages];
+				[self.chatTableView endUpdates];
+
+				if( start == 0 ) {
+					[self.chatTableView reloadData];
+				} else {
+					NSIndexSet *updates = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(start, parsedMessages.count)];
+					NSIndexSet *cols = [NSIndexSet indexSetWithIndex:0];
+
+					[self.chatTableView reloadDataForRowIndexes:updates columnIndexes:cols];
+				}
+			} else {
+				NSLog(@"not on screen updating: %@", self.flow.name);
+				[self.messages addObjectsFromArray:parsedMessages];
+			}
 		}];
+		}
 
 	}];
 }
 
+-(void)setOnScreen:(BOOL)onScreen
+{
+	if(!self.onScreen ) {
+		[self.chatTableView reloadData];
+	}
+	_onScreen = onScreen;
+}
+
 -(void)fetchMessages:(NSDictionary*)options
 {
-	@try {
-  BOOL stream = [self.messages count] != 0;
+ BOOL stream = NO;
   NSString *url;
 
   if( stream ) {
@@ -114,7 +140,7 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
     url = [NSString stringWithFormat:@"%@/messages?limit=100", self.flow.url];
   }
 	
-  self.requestStream = [FDRequest initWithString:url withBlock:^(NSObject *object, NSError *error){
+  [FDRequest initWithString:url withBlock:^(NSObject *object, NSError *error){
 	  if( error ) {
 		  [self performSelectorOnMainThread:@selector(fetchMessages:) withObject:nil waitUntilDone:NO];
 	  } else {
@@ -124,16 +150,11 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 		  } else {
 			  array = (NSArray*)object;
 		  }
-		  [self parseMessages:array];
-		  if( !stream ) {
-			  [self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
+			[self parseMessages:array];
 		  }
+		[self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
 	  }
-	} forStreaming:stream];
-	} @catch (NSException *e) {
-		// try again
-		[self performSelectorOnMainThread:@selector(fetchMessages:) withObject:nil waitUntilDone:NO];
-	}
+	forStreaming:stream];
 }
 
 
@@ -243,12 +264,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if( tableView == self.chatTableView ) {
 		FDMessage* msg = [self.messages objectAtIndex:row];
-
-		NSAttributedString *s = msg.displayString;
-
-		NSRect rect = [s boundingRectWithSize:NSMakeSize(tableView.frame.size.width, 0) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)];
-		return rect.size.height + 3;
-
+		return [msg rowHeightForWidth:tableView.frame.size.width];
 	} else if( tableView == self.influxTableView) {
 	}
 	return 22;
