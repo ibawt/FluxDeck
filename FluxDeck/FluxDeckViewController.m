@@ -11,14 +11,9 @@
 #import "FDFlow.h"
 #import "FDUser.h"
 #import "FDFlowViewController.h"
-#import "FDRequestManager.h"
 #import "FDFlowButton.h"
 
 static FluxDeckViewController* instance = nil;
-
-@interface FluxDeckViewController ()
-
-@end
 
 @implementation FluxDeckViewController
 
@@ -27,10 +22,8 @@ static FluxDeckViewController* instance = nil;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
 		instance = self;
-
 		self.flows = [[NSMutableDictionary alloc] init];
 		self.viewControllers = [[NSMutableArray alloc] init];
-
 		self.flowButtons = [[NSMutableArray alloc] init];
     }
     
@@ -45,8 +38,6 @@ static FluxDeckViewController* instance = nil;
 -(void)awakeFromNib
 {
 	self.tabView.backgroundColor = [NSColor blackColor];
-	//[self.flowSettings setWantsLayer:YES];
-	//self.flowSettings.layer.backgroundColor = CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0);
 	[self getFlows];
 }
 
@@ -57,6 +48,7 @@ static FluxDeckViewController* instance = nil;
 
 	NSView *view = (NSView*)[self.viewControllers[index] view];
 	view.frame = self.flowView.frame;
+	
 	[self.flowView addSubview:[self.viewControllers[index] view]];
 
 	for( int i = 0 ; i < self.viewControllers.count ; ++i ) {
@@ -76,45 +68,40 @@ static FluxDeckViewController* instance = nil;
 
 -(void)getFlows
 {
-	FDRequestManager *manager = [FDRequestManager manager];
-	
-	AFHTTPRequestOperation *operation = [manager GET:@"https://api.flowdock.com/flows" parameters:@{@"users":@"1"} success:^(AFHTTPRequestOperation* operation, id responseObject) {
-
-		NSArray *jsonFlows = responseObject;
-		CGFloat x = self.flowSettings.frame.origin.x + self.flowSettings.frame.size.width;
-		for( NSDictionary *dict in jsonFlows) {
-			FDFlow* flow = [MTLJSONAdapter modelOfClass:FDFlow.class fromJSONDictionary:dict error:nil];
-			if( [flow.open boolValue] ) {
-				self.flows[flow.flowID] = flow;
-				FDFlowViewController *viewController = [[FDFlowViewController alloc] initWithNibName:@"FDFlowViewController" bundle:nil];
-				[self.viewControllers addObject:viewController];
-				viewController.flow = flow;
-				NSArray *array = nil;
-				[[NSBundle mainBundle] loadNibNamed:@"FDFlowButton" owner:nil topLevelObjects:&array];
-				FDFlowButton *fb = nil;
-				for( id i in array ) {
-					if( [i isKindOfClass:FDFlowButton.class]) {
-						fb = i;
-						break;
+	[FDRequest initWithString:@"https://api.flowdock.com/flows?users=1" withBlock:^(NSObject *responseObject, NSError* error) {
+		if( !error ) {
+			NSArray *jsonFlows = (NSArray*)responseObject;
+			CGFloat x = self.flowSettings.frame.origin.x + self.flowSettings.frame.size.width;
+			for( NSDictionary *dict in jsonFlows) {
+				FDFlow* flow = [MTLJSONAdapter modelOfClass:FDFlow.class fromJSONDictionary:dict error:nil];
+				if( [flow.open boolValue] ) {
+					self.flows[flow.flowID] = flow;
+					FDFlowViewController *viewController = [[FDFlowViewController alloc] initWithNibName:@"FDFlowViewController" bundle:nil];
+					[self.viewControllers addObject:viewController];
+					viewController.flow = flow;
+					NSArray *array = nil;
+					[[NSBundle mainBundle] loadNibNamed:@"FDFlowButton" owner:nil topLevelObjects:&array];
+					FDFlowButton *fb = nil;
+					for( id i in array ) {
+						if( [i isKindOfClass:FDFlowButton.class]) {
+							fb = i;
+							break;
+						}
 					}
+					[self.flowButtons addObject:fb];
+					fb.backgroundColor = [NSColor whiteColor];
+					fb.button.title = flow.name;
+					[self.tabView addSubview:fb];
+					CGRect rect = fb.frame;
+					rect.origin.x = x;
+					x += rect.size.width;
+					fb.frame = rect;
 				}
-				[self.flowButtons addObject:fb];
-				fb.backgroundColor = [NSColor whiteColor];
-				fb.button.title = flow.name;
-				[self.tabView addSubview:fb];
-				CGRect rect = fb.frame;
-				rect.origin.x = x;
-				x += rect.size.width;
-				fb.frame = rect;
 			}
+			[self selectFlow:0];
+
 		}
-		[self selectFlow:0];
-
-	} failure: ^(AFHTTPRequestOperation *operation, NSError* error) {
-		NSAssert(false, @"caught error in getting flows %@", error);
 	}];
-
-	[operation start];
 }
 
 @end

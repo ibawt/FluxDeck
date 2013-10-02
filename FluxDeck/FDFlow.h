@@ -22,7 +22,8 @@
 @property (nonatomic, strong) NSString *joinUrl;
 @property (nonatomic, strong) NSString *accessMode;
 @property (nonatomic, strong) NSMutableArray  *users;
+@property (nonatomic, strong) NSMutableDictionary *userHash;
 
 -(void)sortUsers;
-
+-(void)setLastActivity:(NSDate*)date withUserID:(NSNumber*)userID;
 @end

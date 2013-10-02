@@ -11,6 +11,14 @@
 
 @implementation FDFlow
 
+-(id)init
+{
+	if( self = [super init] ) {
+		self.userHash = nil;
+	}
+	return self;
+}
+
 +(NSDictionary*)JSONKeyPathsByPropertyKey
 {
 	return @{ @"flowID" : @"id",
@@ -35,8 +43,21 @@
 
 -(void)sortUsers
 {
+	if( !self.userHash ) {
+		self.userHash = [[NSMutableDictionary alloc] init];
+
+		for( FDUser *user in self.users ) {
+			[self.userHash setObject:user forKey:user.userID];
+		}
+	}
 	[self.users sortUsingComparator:^(FDUser *u1, FDUser *u2) {
 		return [u2.lastActivity compare:u1.lastActivity];
 	}];
 }
+
+-(void)setLastActivity:(NSDate *)date withUserID:(NSNumber *)userID
+{
+	[self.userHash[userID] setLastActivity:date];
+}
+
 @end

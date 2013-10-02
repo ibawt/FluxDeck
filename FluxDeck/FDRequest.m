@@ -49,7 +49,6 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 	NSURLConnection *urlConn = [[NSURLConnection alloc] initWithRequest:urlReq delegate:req];
 	[urlConn start];
-
 	return req;
 }
 
@@ -123,10 +122,8 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 					left = right + 1;
 					right += 2;
 					NSError *error = nil;
-					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:NSJSONReadingMutableContainers error:&error];
-					if( o ) {
-						self.callback(o, error);
-					}
+					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:0 error:&error];
+					self.callback(o, error);
 				} else {
 					right++;
 				}
@@ -134,7 +131,6 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 			self.data = [[NSMutableData alloc] initWithBytes:self.data.bytes + bytesWritten length:self.data.length -bytesWritten];
 		}
 	}
-
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -143,13 +139,16 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:NSJSONReadingMutableContainers error:&error];
 	self.isActive = false;
-	self.callback(obj, nil);
+	self.callback(obj, error);
 	self.callback = nil;
 	self.data = nil;
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+	self.isActive = NO;
 	self.callback(nil, error);
+	self.callback = nil;
+	self.data = nil;
 }
 @end

@@ -13,18 +13,17 @@
 @interface FDFlowViewController : RBLViewController<NSTableViewDataSource,NSTableViewDelegate>
 
 -(IBAction)textEntered:(id)sender;
-
-
 @property (nonatomic,strong) IBOutlet NSTextField *titleField;
 @property (nonatomic,strong) IBOutlet RBLView *inputView;
 @property (nonatomic,strong) IBOutlet RBLView *userView;
 @property (nonatomic,strong) IBOutlet RBLScrollView *messageView;
 @property (nonatomic,strong) IBOutlet RBLView *titleView;
-@property (strong) IBOutlet RBLTableView *chatTableView;
-@property (strong) IBOutlet RBLTableView *userTableView;
-@property (strong) IBOutlet NSTableView *influxTableView;
-@property (strong) IBOutlet NSString    *lastMessageID;
+@property (nonatomic,strong) IBOutlet RBLTableView *chatTableView;
+@property (nonatomic,strong) IBOutlet RBLTableView *userTableView;
+@property (nonatomic,strong) IBOutlet NSTableView *influxTableView;
+@property (nonatomic,strong) NSNumber *lastMessageID;
 @property (nonatomic,strong) FDFlow *flow;
 @property (nonatomic,strong) NSMutableArray *messages;
-@property (nonatomic, strong) NSMutableArray *influx;
+@property (nonatomic,strong) NSMutableArray *influx;
+
 @end

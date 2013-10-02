@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AFURLResponseSerialization.h>
-
 
 @interface FDImageCache : NSObject
 

@@ -7,23 +7,102 @@
 //
 
 #import "FDMessage.h"
+#import "FluxDeck.h"
+#import <TwitterText.h>
+
+static const NSString *kFDHashTag = @"HashTag";
+static const NSString *kFDListName = @"ListName";
+static const NSString *kFDScreenName = @"ScreenName";
+static const NSString *kFDSymbol = @"Symbol";
 
 @implementation FDMessage
 
--(void)parseJSON:(NSObject *)obj
++(NSDictionary*)JSONKeyPathsByPropertyKey
 {
-	NSDictionary *o = (NSDictionary*)obj;
+	return @{
+			 @"attachments" : @"attachments",
+			 @"content" : @"content",
+			 @"edited" : @"edited",
+			 @"flow" : @"flow",
+			 @"msgID" : @"id",
+			 @"sent" :@"sent",
+			 @"tags" : @"tags",
+			 @"user" : @"user",
+			 @"uuid" : @"uuid",
+			 @"event" : @"event"
+			 };
+}
 
-	self.app = [o valueForKey:@"app"];
-	self.attachments = o[@"attachments"];
-	self.content = o[@"content"];
-	self.edited = [o valueForKey:@"edited"];
-	self.flow = [o valueForKey:@"flow"];
-	self.msgID = [NSString stringWithFormat:@"%@",[o valueForKey:@"id"]];
-	self.sent = [NSString stringWithFormat:@"%@",[o valueForKey:@"sent"]];
-	self.tags = [o valueForKey:@"tags"];
-	self.user = [NSString stringWithFormat:@"%@",[o valueForKey:@"user"]];
-	self.uuid = [o valueForKey:@"uuid"];
++ (NSValueTransformer *)appJSONTransformer {
+    NSDictionary *states = @{
+							 @"chat": @(FDChat),
+							 @"influx": @(FDInflux),
+							 @"<null>": @(FDNull),
+							 };
+
+    return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {
+		if( !str ) {
+			str = @"<null>";
+		}
+        return states[str];
+    } reverseBlock:^(NSNumber *state) {
+        return [states allKeysForObject:state].lastObject;
+    }];
+}
+
+-(void)parseContent
+{
+	NSString *str = nil;
+
+	if( [self.event isEqualToString:@"file"] ) {
+		str = @"file";
+	}
+	else if( [self.event isEqualToString:@"comment"]) {
+		str = [self.content valueForKey:@"text"];
+	}
+	else {
+		str = (NSString*)self.content;
+	}
+
+	NSArray *entities = [TwitterText entitiesInText:str];
+	NSMutableAttributedString *ds = [[NSMutableAttributedString alloc] initWithString:str];
+
+	for( TwitterTextEntity *te in entities ) {
+		NSDictionary *attr = nil;
+		NSString *value = [str substringWithRange:te.range];
+		switch(te.type ) {
+			case TwitterTextEntityHashtag:
+				attr = @{ kFDHashTag : value,
+						  NSBackgroundColorAttributeName : [NSColor redColor],
+						  };
+				break;
+			case TwitterTextEntityListName:
+				break;
+			case TwitterTextEntityScreenName:
+				attr = @{ kFDScreenName : value,
+						  NSBackgroundColorAttributeName : [NSColor orangeColor]
+						  };
+				break;
+			case TwitterTextEntitySymbol:
+				break;
+			case TwitterTextEntityURL:
+				attr = @{ NSLinkAttributeName : [NSURL URLWithString:value]
+						  };
+				break;
+		}
+		[ds addAttributes:attr range:te.range];
+	}
+
+	self.displayString = ds;
+}
+
++(NSValueTransformer*)sentJSONTransformer {
+	return FDTimestampValueTransformer();
+}
+
++(NSValueTransformer*)tagsJSONTransform
+{
+	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:NSString.class];
 }
 
 @end

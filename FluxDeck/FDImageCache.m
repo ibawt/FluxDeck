@@ -8,25 +8,16 @@
 
 #import "FDImageCache.h"
 #import <TMCache.h>
-#import "FDRequestManager.h"
-
-@interface FDImageCache ()
-@property (nonatomic, strong) FDRequestManager *requestManager;
-@end
+#import "FDRequest.h"
 
 @implementation FDImageCache
 
 -(id)init
 {
 	if( self = [super init] ) {
-		self.requestManager = [[FDRequestManager alloc] init];
-		[self.requestManager setResponseSerializer:[[AFImageResponseSerializer alloc] init]];
 	}
 	return self;
 }
-
-
-
 
 +(FDImageCache*)instance
 {
@@ -39,25 +30,18 @@
 	return instance;
 }
 
-
-
 +(void)getDataForURL:(NSString *)url onComplete:(void (^)(NSImage *, NSError *))callback
 {
 	[[TMCache sharedCache] objectForKey:url block:^(TMCache *cache, NSString *key, id object) {
 		if( object == nil ) {
-			FDRequestManager *requestManager= [self instance].requestManager;
-			AFHTTPRequestOperation *o = [requestManager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id response ){
-				[[TMCache sharedCache] setObject:response forKey:url];
-				callback(response, nil);
-			} failure:^(AFHTTPRequestOperation* operation, NSError *error) {
-				callback(nil,error);
+			[FDRequest initWithString:url withBlock:^(NSObject *obj, NSError *error) {
+				NSImage *image = [[NSImage alloc] initWithData:(NSData*)obj];
+				callback(image,error);
 			}];
-			[o start];
 		} else {
 			callback(object,nil);
 		}
 	}];
 }
-
 
 @end
