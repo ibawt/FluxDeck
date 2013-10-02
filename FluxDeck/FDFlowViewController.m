@@ -55,12 +55,17 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 	[self.userTableView registerNib:nib forIdentifier:@"FDUserTableCellView"];
 }
 
+-(void)scrollToBottom
+{
+	[self.chatTableView scrollRowToVisible:self.messages.count -1];
+}
+
+
 
 -(void)parseMessages:(NSArray*)messages
 {
 	[[FDFlowViewController queue] addOperationWithBlock:^(void) {
 		NSMutableArray *parsedMessages = [[NSMutableArray alloc] init];
-		NSUInteger start = self.messages.count;
 		for( NSDictionary *d in messages ) {
 			FDMessage *msg = [MTLJSONAdapter modelOfClass:FDMessage.class fromJSONDictionary:d error:nil];
 
@@ -99,15 +104,9 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 				[self.chatTableView beginUpdates];
 				[self.messages addObjectsFromArray:parsedMessages];
 				[self.chatTableView endUpdates];
+				[self.chatTableView reloadData];
 
-				if( start == 0 ) {
-					[self.chatTableView reloadData];
-				} else {
-					NSIndexSet *updates = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(start, parsedMessages.count)];
-					NSIndexSet *cols = [NSIndexSet indexSetWithIndex:0];
-
-					[self.chatTableView reloadDataForRowIndexes:updates columnIndexes:cols];
-				}
+				[self scrollToBottom];
 			} else {
 				NSLog(@"not on screen updating: %@", self.flow.name);
 				[self.messages addObjectsFromArray:parsedMessages];
@@ -124,6 +123,7 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 		[self.chatTableView reloadData];
 	}
 	_onScreen = onScreen;
+	[self scrollToBottom];
 }
 
 -(void)fetchMessages:(NSDictionary*)options
