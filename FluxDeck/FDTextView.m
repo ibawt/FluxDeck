@@ -9,9 +9,10 @@
 #import "FDTextView.h"
 
 @implementation FDTextView
-
+/*
 -(void)mouseDown:(NSEvent *)theEvent
 {
+
 	NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	NSInteger charIndex = [self characterIndexForInsertionAtPoint:point];
 
@@ -24,6 +25,7 @@
 	} else {
 		[super mouseDown:theEvent];
 	}
-}
 
+}
+*/
 @end

@@ -12,5 +12,5 @@
 
 @property (nonatomic,strong) NSTextView *textView;
 @property (nonatomic,strong) NSTextField *usernameField;
-
+@property (nonatomic,strong) NSMenuItem *debugMenu;
 @end

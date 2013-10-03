@@ -13,16 +13,16 @@
 
 @interface FDFlow : MTLModel<MTLJSONSerializing>
 
-@property (nonatomic, strong) NSString *flowID;
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *organization;
-@property (nonatomic, strong) NSNumber *unreadMentions;
-@property (nonatomic, strong) NSNumber *open;
-@property (nonatomic, strong) NSNumber *joined;
-@property (nonatomic, strong) NSString *url;
-@property (nonatomic, strong) NSString *webUrl;
-@property (nonatomic, strong) NSString *joinUrl;
-@property (nonatomic, strong) NSString *accessMode;
+@property (nonatomic, copy) NSString *flowID;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *organization;
+@property (nonatomic, copy) NSNumber *unreadMentions;
+@property (nonatomic, copy) NSNumber *open;
+@property (nonatomic, copy) NSNumber *joined;
+@property (nonatomic, copy) NSString *url;
+@property (nonatomic, copy) NSString *webUrl;
+@property (nonatomic, copy) NSString *joinUrl;
+@property (nonatomic, copy) NSString *accessMode;
 @property (nonatomic, strong) NSMutableArray  *users;
 @property (nonatomic, strong) NSMutableDictionary *userHash;
 

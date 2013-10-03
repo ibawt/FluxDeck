@@ -9,18 +9,21 @@
 #import "FDMessage.h"
 #import "FluxDeck.h"
 #import <TwitterText.h>
-
+#import <math.h>
 static const NSString *kFDHashTag = @"HashTag";
 static const NSString *kFDListName = @"ListName";
 static const NSString *kFDScreenName = @"ScreenName";
 static const NSString *kFDSymbol = @"Symbol";
+
+
+
+#define fequal( _x, _y) (fabs((_x) - (_y) ) < FLT_EPSILON )
 
 @implementation FDMessage
 
 -(id)init
 {
 	if( self = [super init] ) {
-		self.rowHeightCache = [[NSMutableDictionary alloc] init];
 	}
 	return self;
 }
@@ -110,27 +113,22 @@ static const NSString *kFDSymbol = @"Symbol";
 
 -(BOOL)verifyRowHeightForWidth:(CGFloat)w withHeight:(CGFloat)h
 {
-	NSNumber *width = [NSNumber numberWithFloat:w];
-	NSNumber *height = [NSNumber numberWithFloat:h];
-
-	if( ![self.rowHeightCache[width] isEqualToNumber:height] ) {
-		self.rowHeightCache[width] = height;
+	if( fequal(w, self.rowWidth) && fequal(self.rowWidth, h) ) {
+		return YES;
+	} else {
+		self.rowWidth = w;
+		self.rowHeight = h;
 		return NO;
 	}
-	return YES;
 }
 
 -(CGFloat)rowHeightForWidth:(CGFloat)width
 {
-	NSNumber *number = [NSNumber numberWithFloat:width];
-	NSNumber *height = self.rowHeightCache[number];
-
-	if( height == nil ) {
+	if( !fequal(width, self.rowWidth) ) {
 		NSRect rect = [self.displayString boundingRectWithSize:NSMakeSize(width, 0) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)];
-		height = [NSNumber numberWithFloat:rect.size.height + 3];
-		self.rowHeightCache[number] = height;
+		self.rowHeight = rect.size.height + 3;
 	}
-	return [height floatValue];
+	return self.rowHeight;
 }
 
 +(NSValueTransformer*)sentJSONTransformer {

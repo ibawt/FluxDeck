@@ -315,9 +315,6 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 			cell.textView = [[FDTextView alloc] initWithFrame:NSMakeRect(80, 0, tableView.bounds.size.width-80, 0)];
 			cell.textView.identifier = @"ChatTableViewCell";
 			[cell.textView setHorizontallyResizable:NO];
-			//cell.textView.textContainerInset = NSMakeSize(0, 1.5);
-			cell.textView.menu = [[NSMenu alloc] initWithTitle:@"Debug"];
-
 			cell.usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 80, 0)];
 			[cell.usernameField setDrawsBackground:NO];
 			[cell.usernameField setBordered:NO];

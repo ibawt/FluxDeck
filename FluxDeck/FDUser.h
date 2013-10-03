@@ -13,13 +13,13 @@
 
 @property (nonatomic,copy) NSNumber *userID;
 @property (nonatomic,copy) NSString *email;
-@property (nonatomic,strong) NSString *nick;
-@property (nonatomic,strong) NSString *name;
-@property (nonatomic,strong) NSString *avatar;
-@property (nonatomic,strong) NSString *status;
-@property (nonatomic,strong) NSNumber *disabled;
-@property (nonatomic,strong) NSDate *lastActivity;
-@property (nonatomic,strong) NSDate *lastPing;
+@property (nonatomic,copy) NSString *nick;
+@property (nonatomic,copy) NSString *name;
+@property (nonatomic,copy) NSString *avatar;
+@property (nonatomic,copy) NSString *status;
+@property (nonatomic,copy) NSNumber *disabled;
+@property (nonatomic,copy) NSDate *lastActivity;
+@property (nonatomic,copy) NSDate *lastPing;
 
 -(BOOL)isIdle;
 @end

@@ -10,8 +10,8 @@
 
 @interface FDUserTableCellView : RBLTableCellView
 
-@property (nonatomic,strong) IBOutlet NSImageView *statusIcon;
-@property (nonatomic,strong) IBOutlet NSTextField *username;
-@property (nonatomic,strong) IBOutlet NSTextField *lastActivity;
+@property (nonatomic,weak) IBOutlet NSImageView *statusIcon;
+@property (nonatomic,weak) IBOutlet NSTextField *username;
+@property (nonatomic,weak) IBOutlet NSTextField *lastActivity;
 
 @end

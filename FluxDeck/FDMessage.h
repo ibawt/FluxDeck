@@ -18,19 +18,20 @@ typedef enum : NSUInteger {
 
 @interface FDMessage : MTLModel<MTLJSONSerializing>
 
-@property (nonatomic,strong) NSArray  *attachments;
-@property (nonatomic,strong) NSObject *content;
-@property (strong) NSString *edited;
-@property (strong) NSString *flow;
-@property (strong) NSNumber *msgID;
-@property (strong) NSDate *sent;
-@property (strong) NSArray  *tags;
-@property (strong) NSNumber *user;
-@property (strong) NSString *uuid;
-@property (strong) NSString *event;
+@property (nonatomic,copy) NSArray  *attachments;
+@property (nonatomic,copy) NSObject *content;
+@property (nonatomic,copy) NSString *edited;
+@property (nonatomic,copy) NSString *flow;
+@property (nonatomic,copy) NSNumber *msgID;
+@property (nonatomic,copy) NSDate *sent;
+@property (nonatomic,copy) NSArray  *tags;
+@property (nonatomic,copy) NSNumber *user;
+@property (nonatomic,copy) NSString *uuid;
+@property (nonatomic,copy) NSString *event;
 @property (nonatomic,assign) FDApp app;
 @property (nonatomic,strong) NSAttributedString* displayString;
-@property (nonatomic,strong) NSMutableDictionary *rowHeightCache;
+@property (nonatomic,assign) CGFloat rowWidth;
+@property (nonatomic,assign) CGFloat rowHeight;
 -(BOOL)verifyRowHeightForWidth:(CGFloat)width withHeight:(CGFloat)height;
 -(CGFloat)rowHeightForWidth:(CGFloat)width;
 -(void)parseContent;

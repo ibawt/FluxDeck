@@ -13,9 +13,9 @@ typedef void (^FDButtonCallback)(void);
 
 @interface FDFlowButton : RBLView
 
-@property (nonatomic,strong) IBOutlet NSButton* button;
-@property (nonatomic,strong) IBOutlet NSImageView *lock;
-@property (nonatomic,strong) IBOutlet NSImageView *close;
+@property (nonatomic,weak) IBOutlet NSButton* button;
+@property (nonatomic,weak) IBOutlet NSImageView *lock;
+@property (nonatomic,weak) IBOutlet NSImageView *close;
 
 @property (nonatomic,strong) FDButtonCallback callback;
 @end
