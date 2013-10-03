@@ -55,6 +55,13 @@
 	}];
 }
 
+-(FDUser*)userForID:(NSNumber *)uid
+{
+	FDUser *user = self.userHash[uid];
+	NSAssert(user != nil, @"User not found uid: %@", uid);
+	return user;
+}
+
 -(void)setLastActivity:(NSDate *)date withUserID:(NSNumber *)userID
 {
 	[self.userHash[userID] setLastActivity:date];

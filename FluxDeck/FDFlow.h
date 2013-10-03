@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <Mantle.h>
+#import "FDMessage.h"
+#import "FDUser.h"
 
 @interface FDFlow : MTLModel<MTLJSONSerializing>
 
@@ -26,4 +28,5 @@
 
 -(void)sortUsers;
 -(void)setLastActivity:(NSDate*)date withUserID:(NSNumber*)userID;
+-(FDUser*)userForID:(NSNumber*)uid;
 @end

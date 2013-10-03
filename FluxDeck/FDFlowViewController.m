@@ -14,6 +14,8 @@
 #import "FDImageCache.h"
 #import "FDTextView.h"
 #import "FDUserTableCellView.h"
+#import "FDChatTableCellView.h"
+
 #include <math.h>
 
 static const NSTimeInterval kFDFlowPollTime = 3.0;
@@ -21,6 +23,10 @@ static const NSTimeInterval kFDFlowPollTime = 3.0;
 static NSString *kBUILDOK_ICON = @"https://d2cxspbh1aoie1.cloudfront.net/avatars/ac9a7ed457c803acfe8d29559dd9b911/120";
 
 const NSString *kFDUserLinkAttribute = @"FDUserLink";
+
+
+static const NSUInteger kMAX_SCROLLBACK = 256;
+
 
 @interface FDFlowViewController ()
 @property (strong) FDRequest* requestStream;
@@ -53,6 +59,7 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 {
 	NSNib *nib = [[NSNib alloc] initWithNibNamed:@"FDUserTableCellView" bundle:[NSBundle mainBundle]];
 	[self.userTableView registerNib:nib forIdentifier:@"FDUserTableCellView"];
+
 }
 
 -(void)scrollToBottom
@@ -75,9 +82,15 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 			} else if([msg.event isEqualToString:@"action"] ) {
 				//idk
 			}
+			else if( [msg.event isEqualToString:@"user-edit"]) {
+				//idk
+			}
 			else {
 				switch( msg.app) {
 				case FDChat:
+						if( [msg.event isEqualToString:@"comment"]) {
+							NSLog(@"%@", msg.description);
+						}
 					[parsedMessages addObject:msg];
 					[msg parseContent];
 					break;
@@ -103,6 +116,10 @@ const NSString *kFDUserLinkAttribute = @"FDUserLink";
 				NSLog(@"on screen updating: %@", self.flow.name);
 				[self.chatTableView beginUpdates];
 				[self.messages addObjectsFromArray:parsedMessages];
+				if( self.messages.count > kMAX_SCROLLBACK) {
+					NSLog(@"trimming");
+					[self.messages removeObjectsInRange:NSMakeRange(0, self.messages.count - kMAX_SCROLLBACK)];
+				}
 				[self.chatTableView endUpdates];
 				[self.chatTableView reloadData];
 
@@ -260,11 +277,27 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 	return nil;
 }
 
+-(NSArray*)getThreadByParent:(FDMessage*)message
+{
+	NSMutableArray* array = [[NSMutableArray alloc] initWithObjects:message, nil];
+	NSLog(@"title: %@", message.content);
+	for( FDMessage *msg in self.messages ) {
+		if( [msg.event isEqualToString:@"comment"]) {
+			if( [[msg.content valueForKey:@"title"] isEqualToString:(NSString*)message.content]) {
+				[array addObject:msg];
+				NSLog(@"comment: %@", [msg.content valueForKey:@"text"] );
+			}
+		}
+	}
+	return array;
+}
+
+
 -(CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
 	if( tableView == self.chatTableView ) {
 		FDMessage* msg = [self.messages objectAtIndex:row];
-		return [msg rowHeightForWidth:tableView.frame.size.width];
+		return [msg rowHeightForWidth:tableView.frame.size.width-80];
 	} else if( tableView == self.influxTableView) {
 	}
 	return 22;
@@ -275,18 +308,49 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 	if( tableView == self.influxTableView ) {
 	}
 	else if( self.chatTableView == tableView ) {
-		NSTextView *nv = [tableView makeViewWithIdentifier:@"ChatTableViewCell" owner:self];
-		if( nv == nil ) {
-			nv = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, tableView.bounds.size.width, 0)];
-			nv.identifier = @"ChatTableViewCell";
-			[nv setHorizontallyResizable:NO];
-			nv.textContainerInset = NSMakeSize(0, 1.5);
+		FDChatTableCellView *cell = [tableView makeViewWithIdentifier:@"ChatTableCellView" owner:self];
+		if( cell == nil ) {
+			cell = [[FDChatTableCellView alloc] initWithFrame:NSMakeRect(0, 0, tableView.frame.size.width, 0)];
+			cell.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+			cell.textView = [[FDTextView alloc] initWithFrame:NSMakeRect(80, 0, tableView.bounds.size.width-80, 0)];
+			cell.textView.identifier = @"ChatTableViewCell";
+			[cell.textView setHorizontallyResizable:NO];
+			//cell.textView.textContainerInset = NSMakeSize(0, 1.5);
+			cell.textView.menu = [[NSMenu alloc] initWithTitle:@"Debug"];
 
+			cell.usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 80, 0)];
+			[cell.usernameField setDrawsBackground:NO];
+			[cell.usernameField setBordered:NO];
+			[cell.usernameField setBezeled:NO];
+			cell.usernameField.textColor = [NSColor colorWithSRGBRed:0.3 green:0.3 blue:0.3 alpha:1.0f];
+			[cell addSubview:cell.textView];
+			[cell addSubview:cell.usernameField];
 		}
-		[nv.textStorage setAttributedString:[[self.messages objectAtIndex:row] displayString]];
-		[nv sizeToFit];
+		CGRect frame = cell.frame;
+		FDMessage *msg = self.messages[row];
+		frame.size.height = [msg rowHeightForWidth:tableView.frame.size.width-80];
+		cell.frame = frame;
+		[cell.textView.textStorage setAttributedString:msg.displayString];
+		[cell.textView sizeToFit];
+		frame = cell.textView.frame;
+		frame.origin.y = 0;
+		cell.textView.frame = frame;
 
-		return nv;
+		FDUser *user = [self.flow userForID:msg.user];
+		FDMessage *nextUser = (row > 0) ? self.messages[row-1] : nil;
+		if( nextUser && [nextUser.user isEqualToNumber:user.userID] ) {
+			cell.usernameField.stringValue = @"";
+		} else {
+			cell.usernameField.stringValue = user.nick;
+		}
+		[cell.usernameField sizeToFit];
+		frame = cell.usernameField.frame;
+		frame.origin.y = cell.textView.frame.size.height - frame.size.height + 3;
+		cell.usernameField.frame = frame;
+		if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
+			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+		}
+		return cell;
 	}
 	return nil;
 }

@@ -31,7 +31,7 @@ typedef enum : NSUInteger {
 @property (nonatomic,assign) FDApp app;
 @property (nonatomic,strong) NSAttributedString* displayString;
 @property (nonatomic,strong) NSMutableDictionary *rowHeightCache;
-
+-(BOOL)verifyRowHeightForWidth:(CGFloat)width withHeight:(CGFloat)height;
 -(CGFloat)rowHeightForWidth:(CGFloat)width;
 -(void)parseContent;
 @end

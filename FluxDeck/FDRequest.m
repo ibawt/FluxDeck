@@ -143,11 +143,11 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 {
 	NSError *error = nil;
 
-	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:NSJSONReadingMutableContainers error:&error];
+	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:0 error:&error];
+	self.data = nil;
 	self.isActive = false;
 	self.callback(obj, error);
 	self.callback = nil;
-	self.data = nil;
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

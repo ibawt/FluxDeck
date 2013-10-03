@@ -68,8 +68,10 @@ static const NSString *kFDSymbol = @"Symbol";
 	else if( [self.event isEqualToString:@"comment"]) {
 		str = [self.content valueForKey:@"text"];
 	}
-	else {
+	else if( [self.content isKindOfClass:NSString.class]) {
 		str = (NSString*)self.content;
+	} else{
+		NSLog(@"wierd shit: %@", self.description);
 	}
 
 	NSArray *entities = [TwitterText entitiesInText:str];
@@ -92,16 +94,30 @@ static const NSString *kFDSymbol = @"Symbol";
 						  };
 				break;
 			case TwitterTextEntitySymbol:
+				attr = @{};
 				break;
 			case TwitterTextEntityURL:
 				attr = @{ NSLinkAttributeName : [NSURL URLWithString:value]
 						  };
 				break;
 		}
+
 		[ds addAttributes:attr range:te.range];
 	}
 
 	self.displayString = ds;
+}
+
+-(BOOL)verifyRowHeightForWidth:(CGFloat)w withHeight:(CGFloat)h
+{
+	NSNumber *width = [NSNumber numberWithFloat:w];
+	NSNumber *height = [NSNumber numberWithFloat:h];
+
+	if( ![self.rowHeightCache[width] isEqualToNumber:height] ) {
+		self.rowHeightCache[width] = height;
+		return NO;
+	}
+	return YES;
 }
 
 -(CGFloat)rowHeightForWidth:(CGFloat)width

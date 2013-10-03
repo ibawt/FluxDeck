@@ -14,7 +14,6 @@
 #import "FDFlowButton.h"
 
 static FluxDeckViewController* instance = nil;
-
 @implementation FluxDeckViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -40,6 +39,7 @@ static FluxDeckViewController* instance = nil;
 	self.tabView.backgroundColor = [NSColor blackColor];
 	[self getFlows];
 }
+
 
 -(void)selectFlow:(FDFlow*)flow
 {
@@ -113,7 +113,7 @@ static FluxDeckViewController* instance = nil;
 					};
 				}
 			}
-			[self selectFlow:[self.viewControllers[0] flow]];
+			[self selectFlow:((FDFlowViewController*)self.viewControllers[0]).flow];
 
 		}
 	}];

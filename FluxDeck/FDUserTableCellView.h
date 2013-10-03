@@ -13,4 +13,5 @@
 @property (nonatomic,strong) IBOutlet NSImageView *statusIcon;
 @property (nonatomic,strong) IBOutlet NSTextField *username;
 @property (nonatomic,strong) IBOutlet NSTextField *lastActivity;
+
 @end
