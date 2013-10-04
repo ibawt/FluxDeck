@@ -93,6 +93,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 		if( ret == NSAlertDefaultReturn ) {
 			key = text.stringValue;
+
 			[[NSUserDefaults standardUserDefaults] setObject:key forKey:@"api_key"];
 		}
 	}

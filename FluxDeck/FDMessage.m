@@ -17,8 +17,6 @@ static const NSString *kFDListName = @"ListName";
 static const NSString *kFDScreenName = @"ScreenName";
 static const NSString *kFDSymbol = @"Symbol";
 
-
-
 #define fequal( _x, _y) (fabs((_x) - (_y) ) < FLT_EPSILON )
 
 @implementation FDMessage

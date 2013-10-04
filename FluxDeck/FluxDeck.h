@@ -18,6 +18,6 @@
 NSValueTransformer* FDTimestampValueTransformer(void);
 NSValueTransformer* FDBooleanValueTransformer(void);
 
-#define kFDChatLinePadding 3.0f
+#define kFDChatLinePadding 7.0f
 
 extern int ddLogLevel;

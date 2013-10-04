@@ -56,6 +56,17 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 	return queue;
 }
 
+-(void)sendNotification:(FDMessage*)message
+{
+	NSUserNotification *n = [[NSUserNotification alloc] init];
+	FDUser *user = [self.flow userForID:message.user];
+
+	n.title = [NSString stringWithFormat:@"%@ - %@", self.flow.name, user.nick ];
+	n.informativeText = [message.displayString string];
+
+	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:n];
+}
+
 -(void)awakeFromNib
 {
 	NSNib *nib = [[NSNib alloc] initWithNibNamed:@"FDUserTableCellView" bundle:[NSBundle mainBundle]];
@@ -120,7 +131,9 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 
 			[self scrollToBottom];
 		} else {
+
 			DDLogInfo(@"not on screen updating: %@", self.flow.name);
+		
 			[self.messages addObjectsFromArray:parsedMessages];
 			[self trimMessages];
 		}
@@ -353,7 +366,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
 		//}
 		frame = cell.frame;
-		frame.size.height = cell.textView.frame.size.height;
+		frame.size.height = cell.textView.frame.size.height ;
 		cell.frame = frame;
 		[cell setNeedsDisplay:YES];
 		return cell;

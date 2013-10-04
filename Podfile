@@ -5,3 +5,7 @@ pod 'FXKeychain'
 pod 'twitter-text-objc'
 pod 'Rebel'
 pod 'CocoaLumberjack'
+
+target 'FluxDeckTests', :exclusive => true do
+  pod 'OCMock'
+end

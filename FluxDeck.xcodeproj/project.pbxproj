@@ -7,16 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2FF3AE4EB3AC4499901512DC /* libPods-FluxDeckTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C251B66DE644BFB1B7FBFB /* libPods-FluxDeckTests.a */; };
 		B537DDAA17B6516300052DD3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537DDA917B6516300052DD3 /* Cocoa.framework */; };
 		B537DDB417B6516300052DD3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B537DDB217B6516300052DD3 /* InfoPlist.strings */; };
 		B537DDB617B6516300052DD3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDB517B6516300052DD3 /* main.m */; };
 		B537DDBA17B6516300052DD3 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = B537DDB817B6516300052DD3 /* Credits.rtf */; };
 		B537DDBD17B6516300052DD3 /* FDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDBC17B6516300052DD3 /* FDAppDelegate.m */; };
 		B537DDC017B6516400052DD3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DDBE17B6516400052DD3 /* MainMenu.xib */; };
-		B537DDC817B6516400052DD3 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537DDC717B6516400052DD3 /* SenTestingKit.framework */; };
-		B537DDC917B6516400052DD3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537DDA917B6516300052DD3 /* Cocoa.framework */; };
-		B537DDD117B6516400052DD3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B537DDCF17B6516400052DD3 /* InfoPlist.strings */; };
-		B537DDD417B6516400052DD3 /* FluxDeckTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDD317B6516400052DD3 /* FluxDeckTests.m */; };
 		B537DDE017B6526A00052DD3 /* FDUser.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDDF17B6526A00052DD3 /* FDUser.m */; };
 		B537DDE317B6528A00052DD3 /* FDRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDE217B6528900052DD3 /* FDRequest.m */; };
 		B537DDE917B66D7E00052DD3 /* FDFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDE817B66D7E00052DD3 /* FDFlow.m */; };
@@ -26,12 +23,16 @@
 		B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B537DDF317B6837500052DD3 /* FDFlowViewController.xib */; };
 		B537DDF817B68ED900052DD3 /* FDMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDF717B68ED900052DD3 /* FDMessage.m */; };
 		B537DDFB17B6BA7600052DD3 /* FDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDFA17B6BA7600052DD3 /* FDImageCache.m */; };
+		B54D96CB17FF57AD00183215 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B54D96C617FF57AD00183215 /* InfoPlist.strings */; };
+		B54D96CD17FF57AD00183215 /* FluxDeckTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B54D96C917FF57AD00183215 /* FluxDeckTests-Info.plist */; };
+		B54D96CF17FF582A00183215 /* FluxDeck_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D96C817FF57AD00183215 /* FluxDeck_Tests.m */; };
 		B55702E817FCE77600A0DB2B /* FDChatTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B55702E717FCE77600A0DB2B /* FDChatTableCellView.m */; };
 		B56EA72A17F734EB00A0FE80 /* FluxDeck.m in Sources */ = {isa = PBXBuildFile; fileRef = B56EA72917F734EB00A0FE80 /* FluxDeck.m */; };
 		B56EA72F17F745C300A0FE80 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = B56EA72E17F745C300A0FE80 /* Podfile */; };
 		B56EA73417F7CD0E00A0FE80 /* FDFlowButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = B56EA73317F7CD0E00A0FE80 /* FDFlowButton.xib */; };
 		B56EA73717F7D0DD00A0FE80 /* FDFlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */; };
 		B5755DD417FE5D5D00198439 /* FDUserTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5755DD317FE5D5D00198439 /* FDUserTableCellView.xib */; };
+		B58292DC17FF56CD00BCA335 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58292D517FF55D600BCA335 /* XCTest.framework */; };
 		B59AA59017BFCFA10021CB87 /* FDTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B59AA58F17BFCFA10021CB87 /* FDTextView.m */; };
 		B5AD8CD917F87947008FB926 /* FDTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD8CD817F87947008FB926 /* FDTitleView.m */; };
 		B5AD8CDE17F89039008FB926 /* FDUserTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD8CDD17F89039008FB926 /* FDUserTableCellView.m */; };
@@ -39,7 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B537DDCA17B6516400052DD3 /* PBXContainerItemProxy */ = {
+		B58292E617FF56CD00BCA335 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B537DD9E17B6516300052DD3 /* Project object */;
 			proxyType = 1;
@@ -49,8 +50,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		31C251B66DE644BFB1B7FBFB /* libPods-FluxDeckTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FluxDeckTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E1BF4B90F0C4257B92F5C34 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		80DD64DE3DF84D4F86084536 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		A7B2B7E29FE345BBA8F081D1 /* Pods-FluxDeckTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FluxDeckTests.xcconfig"; path = "Pods/Pods-FluxDeckTests.xcconfig"; sourceTree = "<group>"; };
 		B537DDA617B6516300052DD3 /* FluxDeck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FluxDeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B537DDA917B6516300052DD3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		B537DDAC17B6516300052DD3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -64,12 +67,7 @@
 		B537DDBB17B6516300052DD3 /* FDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDAppDelegate.h; sourceTree = "<group>"; };
 		B537DDBC17B6516300052DD3 /* FDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FDAppDelegate.m; sourceTree = "<group>"; };
 		B537DDBF17B6516400052DD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		B537DDC617B6516400052DD3 /* FluxDeckTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FluxDeckTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B537DDC717B6516400052DD3 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		B537DDCE17B6516400052DD3 /* FluxDeckTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FluxDeckTests-Info.plist"; sourceTree = "<group>"; };
-		B537DDD017B6516400052DD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		B537DDD217B6516400052DD3 /* FluxDeckTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FluxDeckTests.h; sourceTree = "<group>"; };
-		B537DDD317B6516400052DD3 /* FluxDeckTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FluxDeckTests.m; sourceTree = "<group>"; };
 		B537DDDD17B6519D00052DD3 /* FluxDeck.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = FluxDeck.entitlements; sourceTree = "<group>"; };
 		B537DDDE17B6526A00052DD3 /* FDUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDUser.h; sourceTree = "<group>"; };
 		B537DDDF17B6526A00052DD3 /* FDUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDUser.m; sourceTree = "<group>"; };
@@ -87,6 +85,10 @@
 		B537DDF717B68ED900052DD3 /* FDMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMessage.m; sourceTree = "<group>"; };
 		B537DDF917B6BA7600052DD3 /* FDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDImageCache.h; sourceTree = "<group>"; };
 		B537DDFA17B6BA7600052DD3 /* FDImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDImageCache.m; sourceTree = "<group>"; };
+		B54D96C717FF57AD00183215 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B54D96C817FF57AD00183215 /* FluxDeck_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FluxDeck_Tests.m; sourceTree = "<group>"; };
+		B54D96C917FF57AD00183215 /* FluxDeckTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "FluxDeckTests-Info.plist"; sourceTree = "<group>"; };
+		B54D96CA17FF57AD00183215 /* FluxDeckTests-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FluxDeckTests-Prefix.pch"; sourceTree = "<group>"; };
 		B55702E617FCE77600A0DB2B /* FDChatTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDChatTableCellView.h; sourceTree = "<group>"; };
 		B55702E717FCE77600A0DB2B /* FDChatTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDChatTableCellView.m; sourceTree = "<group>"; };
 		B56EA72817F734EB00A0FE80 /* FluxDeck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FluxDeck.h; sourceTree = "<group>"; };
@@ -96,6 +98,8 @@
 		B56EA73517F7D0DD00A0FE80 /* FDFlowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFlowButton.h; sourceTree = "<group>"; };
 		B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFlowButton.m; sourceTree = "<group>"; };
 		B5755DD317FE5D5D00198439 /* FDUserTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDUserTableCellView.xib; sourceTree = "<group>"; };
+		B58292D517FF55D600BCA335 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B58292DB17FF56CD00BCA335 /* FluxDeckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FluxDeckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B59AA58E17BFCFA10021CB87 /* FDTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTextView.h; sourceTree = "<group>"; };
 		B59AA58F17BFCFA10021CB87 /* FDTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDTextView.m; sourceTree = "<group>"; };
 		B5AD8CD717F87947008FB926 /* FDTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTitleView.h; sourceTree = "<group>"; };
@@ -114,12 +118,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B537DDC217B6516400052DD3 /* Frameworks */ = {
+		B58292D817FF56CD00BCA335 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B537DDC817B6516400052DD3 /* SenTestingKit.framework in Frameworks */,
-				B537DDC917B6516400052DD3 /* Cocoa.framework in Frameworks */,
+				B58292DC17FF56CD00BCA335 /* XCTest.framework in Frameworks */,
+				2FF3AE4EB3AC4499901512DC /* libPods-FluxDeckTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,12 +133,13 @@
 		B537DD9D17B6516300052DD3 = {
 			isa = PBXGroup;
 			children = (
+				B54D96C517FF57AD00183215 /* FluxDeckTests */,
 				B56EA72E17F745C300A0FE80 /* Podfile */,
 				B537DDAF17B6516300052DD3 /* FluxDeck */,
-				B537DDCC17B6516400052DD3 /* FluxDeckTests */,
 				B537DDA817B6516300052DD3 /* Frameworks */,
 				B537DDA717B6516300052DD3 /* Products */,
 				80DD64DE3DF84D4F86084536 /* Pods.xcconfig */,
+				A7B2B7E29FE345BBA8F081D1 /* Pods-FluxDeckTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,7 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				B537DDA617B6516300052DD3 /* FluxDeck.app */,
-				B537DDC617B6516400052DD3 /* FluxDeckTests.octest */,
+				B58292DB17FF56CD00BCA335 /* FluxDeckTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,10 +155,12 @@
 		B537DDA817B6516300052DD3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B58292D517FF55D600BCA335 /* XCTest.framework */,
 				B537DDA917B6516300052DD3 /* Cocoa.framework */,
 				B537DDC717B6516400052DD3 /* SenTestingKit.framework */,
 				B537DDAB17B6516300052DD3 /* Other Frameworks */,
 				7E1BF4B90F0C4257B92F5C34 /* libPods.a */,
+				31C251B66DE644BFB1B7FBFB /* libPods-FluxDeckTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -200,23 +207,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B537DDCC17B6516400052DD3 /* FluxDeckTests */ = {
+		B54D96C517FF57AD00183215 /* FluxDeckTests */ = {
 			isa = PBXGroup;
 			children = (
-				B537DDD217B6516400052DD3 /* FluxDeckTests.h */,
-				B537DDD317B6516400052DD3 /* FluxDeckTests.m */,
-				B537DDCD17B6516400052DD3 /* Supporting Files */,
+				B54D96C617FF57AD00183215 /* InfoPlist.strings */,
+				B54D96C817FF57AD00183215 /* FluxDeck_Tests.m */,
+				B54D96C917FF57AD00183215 /* FluxDeckTests-Info.plist */,
+				B54D96CA17FF57AD00183215 /* FluxDeckTests-Prefix.pch */,
 			);
 			path = FluxDeckTests;
-			sourceTree = "<group>";
-		};
-		B537DDCD17B6516400052DD3 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				B537DDCE17B6516400052DD3 /* FluxDeckTests-Info.plist */,
-				B537DDCF17B6516400052DD3 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		B56EA73017F77E3E00A0FE80 /* Model */ = {
@@ -287,24 +286,25 @@
 			productReference = B537DDA617B6516300052DD3 /* FluxDeck.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B537DDC517B6516400052DD3 /* FluxDeckTests */ = {
+		B58292DA17FF56CD00BCA335 /* FluxDeckTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B537DDDA17B6516400052DD3 /* Build configuration list for PBXNativeTarget "FluxDeckTests" */;
+			buildConfigurationList = B58292E817FF56CD00BCA335 /* Build configuration list for PBXNativeTarget "FluxDeckTests" */;
 			buildPhases = (
-				B537DDC117B6516400052DD3 /* Sources */,
-				B537DDC217B6516400052DD3 /* Frameworks */,
-				B537DDC317B6516400052DD3 /* Resources */,
-				B537DDC417B6516400052DD3 /* ShellScript */,
+				DD2687331A894C44A20998D3 /* Check Pods Manifest.lock */,
+				B58292D717FF56CD00BCA335 /* Sources */,
+				B58292D817FF56CD00BCA335 /* Frameworks */,
+				B58292D917FF56CD00BCA335 /* Resources */,
+				126387258DFC47E6AFA26DAA /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				B537DDCB17B6516400052DD3 /* PBXTargetDependency */,
+				B58292E717FF56CD00BCA335 /* PBXTargetDependency */,
 			);
 			name = FluxDeckTests;
-			productName = FluxDeckTests;
-			productReference = B537DDC617B6516400052DD3 /* FluxDeckTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productName = "FluxDeckTests";
+			productReference = B58292DB17FF56CD00BCA335 /* FluxDeckTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -323,6 +323,9 @@
 							};
 						};
 					};
+					B58292DA17FF56CD00BCA335 = {
+						TestTargetID = B537DDA517B6516300052DD3;
+					};
 				};
 			};
 			buildConfigurationList = B537DDA117B6516300052DD3 /* Build configuration list for PBXProject "FluxDeck" */;
@@ -338,7 +341,7 @@
 			projectRoot = "";
 			targets = (
 				B537DDA517B6516300052DD3 /* FluxDeck */,
-				B537DDC517B6516400052DD3 /* FluxDeckTests */,
+				B58292DA17FF56CD00BCA335 /* FluxDeckTests */,
 			);
 		};
 /* End PBXProject section */
@@ -348,6 +351,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B54D96CD17FF57AD00183215 /* FluxDeckTests-Info.plist in Resources */,
 				B537DDB417B6516300052DD3 /* InfoPlist.strings in Resources */,
 				B537DDBA17B6516300052DD3 /* Credits.rtf in Resources */,
 				B537DDC017B6516400052DD3 /* MainMenu.xib in Resources */,
@@ -355,21 +359,36 @@
 				B5755DD417FE5D5D00198439 /* FDUserTableCellView.xib in Resources */,
 				B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */,
 				B56EA72F17F745C300A0FE80 /* Podfile in Resources */,
+				B54D96CB17FF57AD00183215 /* InfoPlist.strings in Resources */,
 				B56EA73417F7CD0E00A0FE80 /* FDFlowButton.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B537DDC317B6516400052DD3 /* Resources */ = {
+		B58292D917FF56CD00BCA335 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B537DDD117B6516400052DD3 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		126387258DFC47E6AFA26DAA /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-FluxDeckTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A1473075177B4D639A9E6E3B /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -385,19 +404,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		B537DDC417B6516400052DD3 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 		C307009D827A40DB9E5FBE88 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -411,6 +417,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DD2687331A894C44A20998D3 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -438,21 +459,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B537DDC117B6516400052DD3 /* Sources */ = {
+		B58292D717FF56CD00BCA335 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B537DDD417B6516400052DD3 /* FluxDeckTests.m in Sources */,
+				B54D96CF17FF582A00183215 /* FluxDeck_Tests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B537DDCB17B6516400052DD3 /* PBXTargetDependency */ = {
+		B58292E717FF56CD00BCA335 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B537DDA517B6516300052DD3 /* FluxDeck */;
-			targetProxy = B537DDCA17B6516400052DD3 /* PBXContainerItemProxy */;
+			targetProxy = B58292E617FF56CD00BCA335 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -481,10 +502,10 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
-		B537DDCF17B6516400052DD3 /* InfoPlist.strings */ = {
+		B54D96C617FF57AD00183215 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				B537DDD017B6516400052DD3 /* en */,
+				B54D96C717FF57AD00183215 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -560,6 +581,10 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FluxDeck/FluxDeck-Prefix.pch";
 				GENERATE_PROFILING_CODE = NO;
@@ -577,6 +602,10 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FluxDeck/FluxDeck-Prefix.pch";
 				GENERATE_PROFILING_CODE = NO;
@@ -587,33 +616,56 @@
 			};
 			name = Release;
 		};
-		B537DDDB17B6516400052DD3 /* Debug */ = {
+		B58292E917FF56CD00BCA335 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7B2B7E29FE345BBA8F081D1 /* Pods-FluxDeckTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FluxDeck.app/Contents/MacOS/FluxDeck";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FluxDeck/FluxDeck-Prefix.pch";
+				GCC_PREFIX_HEADER = "FluxDeckTests/FluxDeckTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = "FluxDeckTests/FluxDeckTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
+				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
 		};
-		B537DDDC17B6516400052DD3 /* Release */ = {
+		B58292EA17FF56CD00BCA335 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7B2B7E29FE345BBA8F081D1 /* Pods-FluxDeckTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FluxDeck.app/Contents/MacOS/FluxDeck";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FluxDeck/FluxDeck-Prefix.pch";
+				GCC_PREFIX_HEADER = "FluxDeckTests/FluxDeckTests-Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = "FluxDeckTests/FluxDeckTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
+				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
@@ -638,11 +690,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B537DDDA17B6516400052DD3 /* Build configuration list for PBXNativeTarget "FluxDeckTests" */ = {
+		B58292E817FF56CD00BCA335 /* Build configuration list for PBXNativeTarget "FluxDeckTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B537DDDB17B6516400052DD3 /* Debug */,
-				B537DDDC17B6516400052DD3 /* Release */,
+				B58292E917FF56CD00BCA335 /* Debug */,
+				B58292EA17FF56CD00BCA335 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
