@@ -1,3 +1,2 @@
 language: objective-c
-workspace: FluxDeckWorkspace.xcworkspace
-scheme: FluxDesk
+script: xcodebuild test -workspace FluxDeck.xcworkspace -scheme FluxDeckTests
