@@ -14,9 +14,7 @@
 
 -(IBAction)textEntered:(id)sender;
 @property (nonatomic,weak) IBOutlet NSTextField *titleField;
-@property (nonatomic,weak) IBOutlet RBLView *inputView;
 @property (nonatomic,weak) IBOutlet RBLView *userView;
-@property (nonatomic,weak) IBOutlet RBLScrollView *messageView;
 @property (nonatomic,weak) IBOutlet RBLView *titleView;
 @property (nonatomic,weak) IBOutlet RBLTableView *chatTableView;
 @property (nonatomic,weak) IBOutlet RBLTableView *userTableView;

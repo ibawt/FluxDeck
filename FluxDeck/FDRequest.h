@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^FDRequestCallback)(NSData *json, NSError *error);
+typedef void (^FDRequestCallback)(NSData *data, NSError *error);
 
 @interface FDRequest : NSObject<NSURLConnectionDelegate>
 +(FDRequest*) initWithString:(NSString *)url withBlock:(FDRequestCallback)block;
@@ -16,5 +16,5 @@ typedef void (^FDRequestCallback)(NSData *json, NSError *error);
 +(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block withData:(NSData*)data;
 @property (nonatomic,strong) NSMutableData *data;
 @property (nonatomic,copy) FDRequestCallback callback;
-@property (assign) BOOL isActive;
+@property (nonatomic,assign) BOOL isActive;
 @end

@@ -13,8 +13,8 @@
 -(void)getFlows;
 +(FluxDeckViewController*)instance;
 @property (nonatomic,strong) NSMutableArray *flowButtons;
-@property (nonatomic,strong) IBOutlet RBLView* tabView;
-@property (nonatomic,strong) IBOutlet RBLView* flowView;
+@property (nonatomic,weak) IBOutlet RBLView* tabView;
+@property (nonatomic,weak) IBOutlet RBLView* flowView;
 @property (nonatomic,strong) IBOutlet NSButton* flowSettings;
 @property (nonatomic,strong) NSMutableDictionary *users;
 @property (nonatomic,strong) NSMutableDictionary *flows;

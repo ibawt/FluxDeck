@@ -17,5 +17,5 @@ typedef void (^FDButtonCallback)(void);
 @property (nonatomic,weak) IBOutlet NSImageView *lock;
 @property (nonatomic,weak) IBOutlet NSImageView *close;
 
-@property (nonatomic,strong) FDButtonCallback callback;
+@property (nonatomic,copy) FDButtonCallback callback;
 @end
