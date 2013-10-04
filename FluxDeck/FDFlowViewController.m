@@ -15,6 +15,7 @@
 #import "FDTextView.h"
 #import "FDUserTableCellView.h"
 #import "FDChatTableCellView.h"
+#import "FluxDeck.h"
 
 #include <math.h>
 
@@ -25,7 +26,7 @@ static NSString *kBUILDOK_ICON = @"https://d2cxspbh1aoie1.cloudfront.net/avatars
 const NSString *kFDUserLinkAttribute = @"FDUserLink";
 
 
-static const NSUInteger kMAX_SCROLLBACK = 256;
+static const NSUInteger kMAX_SCROLLBACK = 128;
 
 
 @interface FDFlowViewController ()
@@ -71,26 +72,25 @@ static const NSUInteger kMAX_SCROLLBACK = 256;
 
 -(void)parseMessages:(NSArray*)messages
 {
-	[[FDFlowViewController queue] addOperationWithBlock:^(void) {
-		NSMutableArray *parsedMessages = [[NSMutableArray alloc] init];
-		for( NSDictionary *d in messages ) {
-			FDMessage *msg = [MTLJSONAdapter modelOfClass:FDMessage.class fromJSONDictionary:d error:nil];
+	NSMutableArray *parsedMessages = [[NSMutableArray alloc] init];
+	for( NSDictionary *d in messages ) {
+		FDMessage *msg = [MTLJSONAdapter modelOfClass:FDMessage.class fromJSONDictionary:d error:nil];
 
-			if( [msg.event isEqualToString:@"backend.join.user"] ) {
-				FDUser *user = [MTLJSONAdapter modelOfClass:FDUser.class fromJSONDictionary:(NSDictionary*)msg.content error:nil];
-				[self.flow.users addObject:user];
-			} else if([msg.event isEqualToString:@"action"] ) {
-				//idk
-			}
-			else if( [msg.event isEqualToString:@"user-edit"]) {
-				//idk
-			}
-			else {
-				switch( msg.app) {
+		if( [msg.event isEqualToString:@"backend.join.user"] ) {
+			FDUser *user = [MTLJSONAdapter modelOfClass:FDUser.class fromJSONDictionary:(NSDictionary*)msg.content error:nil];
+			[self.flow.users addObject:user];
+		} else if([msg.event isEqualToString:@"action"] ) {
+			//idk
+		}
+		else if( [msg.event isEqualToString:@"user-edit"]) {
+			//idk
+		}
+		else {
+			switch( msg.app) {
 				case FDChat:
-						if( [msg.event isEqualToString:@"comment"]) {
-							NSLog(@"%@", msg.description);
-						}
+					if( [msg.event isEqualToString:@"comment"]) {
+						NSLog(@"%@", msg.description);
+					}
 					[parsedMessages addObject:msg];
 					[msg parseContent];
 					break;
@@ -105,33 +105,34 @@ static const NSUInteger kMAX_SCROLLBACK = 256;
 						}
 					}
 					break;
-				}
 			}
 		}
-		if( parsedMessages.count > 0 ) {
-			self.lastMessageID = [[parsedMessages objectAtIndex:parsedMessages.count-1] msgID];
+	}
+	if( parsedMessages.count > 0  ) {
+		self.lastMessageID = [[parsedMessages objectAtIndex:parsedMessages.count-1] msgID];
+		if( self.onScreen ) {
+			NSLog(@"on screen updating: %@", self.flow.name);
+			[self.chatTableView beginUpdates];
+			[self.messages addObjectsFromArray:parsedMessages];
+			[self trimMessages];
+			[self.chatTableView endUpdates];
+			[self.chatTableView reloadData];
 
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^(void){
-			if( self.onScreen ) {
-				NSLog(@"on screen updating: %@", self.flow.name);
-				[self.chatTableView beginUpdates];
-				[self.messages addObjectsFromArray:parsedMessages];
-				if( self.messages.count > kMAX_SCROLLBACK) {
-					NSLog(@"trimming");
-					[self.messages removeObjectsInRange:NSMakeRange(0, self.messages.count - kMAX_SCROLLBACK)];
-				}
-				[self.chatTableView endUpdates];
-				[self.chatTableView reloadData];
-
-				[self scrollToBottom];
-			} else {
-				NSLog(@"not on screen updating: %@", self.flow.name);
-				[self.messages addObjectsFromArray:parsedMessages];
-			}
-		}];
+			[self scrollToBottom];
+		} else {
+			NSLog(@"not on screen updating: %@", self.flow.name);
+			[self.messages addObjectsFromArray:parsedMessages];
+			[self trimMessages];
 		}
+	}
+}
 
-	}];
+-(void)trimMessages
+{
+	if( self.messages.count > kMAX_SCROLLBACK) {
+		NSLog(@"trimming");
+		[self.messages removeObjectsInRange:NSMakeRange(0, self.messages.count - kMAX_SCROLLBACK)];
+	}
 }
 
 -(void)setOnScreen:(BOOL)onScreen
@@ -145,33 +146,31 @@ static const NSUInteger kMAX_SCROLLBACK = 256;
 
 -(void)fetchMessages:(NSDictionary*)options
 {
- BOOL stream = NO;
-  NSString *url;
+	BOOL stream = NO;
+	NSString *url;
 
-  if( stream ) {
-    url = [NSString stringWithFormat:@"%@", self.flow.url];
-  }
-  else if( self.lastMessageID) {
-    url = [NSString stringWithFormat:@"%@/messages?limit=100&since_id=%@", self.flow.url, self.lastMessageID];
-  } else {
-    url = [NSString stringWithFormat:@"%@/messages?limit=100", self.flow.url];
-  }
+	if( stream ) {
+		url = [NSString stringWithFormat:@"%@", self.flow.url];
+	}
+	else if( self.lastMessageID) {
+		url = [NSString stringWithFormat:@"%@/messages?limit=%ld&since_id=%@",self.flow.url, kMAX_SCROLLBACK, self.lastMessageID];
+	} else {
+		url = [NSString stringWithFormat:@"%@/messages?limit=%ld", self.flow.url, kMAX_SCROLLBACK];
+	}
 	
-  [FDRequest initWithString:url withBlock:^(NSObject *object, NSError *error){
-	  if( error ) {
-		  [self performSelectorOnMainThread:@selector(fetchMessages:) withObject:nil waitUntilDone:NO];
-	  } else {
-		  NSArray *array;
-		  if( [object isKindOfClass:NSDictionary.class]) {
-			  array = [[NSArray alloc] initWithObjects:object, nil];
-		  } else {
-			  array = (NSArray*)object;
-		  }
+	[FDRequest initWithString:url withBlock:^(NSData *data, NSError *error){
+		@autoreleasepool {
+			NSObject *object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+			NSArray *array;
+			if( [object isKindOfClass:NSDictionary.class]) {
+				array = [[NSArray alloc] initWithObjects:object, nil];
+			} else {
+				array = (NSArray*)object;
+			}
 			[self parseMessages:array];
-		  }
-		[self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
-	  }
-	forStreaming:stream];
+			[self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
+		}
+	} forStreaming:NO];
 }
 
 
@@ -313,7 +312,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 			cell = [[FDChatTableCellView alloc] initWithFrame:NSMakeRect(0, 0, tableView.frame.size.width, 0)];
 			cell.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 			cell.textView = [[FDTextView alloc] initWithFrame:NSMakeRect(80, 0, tableView.bounds.size.width-80, 0)];
-			cell.textView.identifier = @"ChatTableViewCell";
+			cell.identifier = @"ChatTableCellView";
 			[cell.textView setHorizontallyResizable:NO];
 			cell.usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 80, 0)];
 			[cell.usernameField setDrawsBackground:NO];
@@ -325,7 +324,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		}
 		CGRect frame = cell.frame;
 		FDMessage *msg = self.messages[row];
-		frame.size.height = [msg rowHeightForWidth:tableView.frame.size.width-80];
+		frame.size.height = [msg rowHeightForWidth:tableView.frame.size.width-80] + kFDChatLinePadding;
 		cell.frame = frame;
 		[cell.textView.textStorage setAttributedString:msg.displayString];
 		[cell.textView sizeToFit];
@@ -340,13 +339,14 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		} else {
 			cell.usernameField.stringValue = user.nick;
 		}
-		[cell.usernameField sizeToFit];
+		//[cell.usernameField sizeToFit];
 		frame = cell.usernameField.frame;
 		frame.origin.y = cell.textView.frame.size.height - frame.size.height + 3;
 		cell.usernameField.frame = frame;
 		if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
 			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
 		}
+		[cell setNeedsDisplay:YES];
 		return cell;
 	}
 	return nil;

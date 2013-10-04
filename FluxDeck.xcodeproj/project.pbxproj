@@ -31,6 +31,7 @@
 		B56EA72F17F745C300A0FE80 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = B56EA72E17F745C300A0FE80 /* Podfile */; };
 		B56EA73417F7CD0E00A0FE80 /* FDFlowButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = B56EA73317F7CD0E00A0FE80 /* FDFlowButton.xib */; };
 		B56EA73717F7D0DD00A0FE80 /* FDFlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */; };
+		B5755DD417FE5D5D00198439 /* FDUserTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5755DD317FE5D5D00198439 /* FDUserTableCellView.xib */; };
 		B59AA59017BFCFA10021CB87 /* FDTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B59AA58F17BFCFA10021CB87 /* FDTextView.m */; };
 		B5AD8CD917F87947008FB926 /* FDTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD8CD817F87947008FB926 /* FDTitleView.m */; };
 		B5AD8CDE17F89039008FB926 /* FDUserTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD8CDD17F89039008FB926 /* FDUserTableCellView.m */; };
@@ -94,6 +95,7 @@
 		B56EA73317F7CD0E00A0FE80 /* FDFlowButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDFlowButton.xib; sourceTree = "<group>"; };
 		B56EA73517F7D0DD00A0FE80 /* FDFlowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFlowButton.h; sourceTree = "<group>"; };
 		B56EA73617F7D0DD00A0FE80 /* FDFlowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFlowButton.m; sourceTree = "<group>"; };
+		B5755DD317FE5D5D00198439 /* FDUserTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDUserTableCellView.xib; sourceTree = "<group>"; };
 		B59AA58E17BFCFA10021CB87 /* FDTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTextView.h; sourceTree = "<group>"; };
 		B59AA58F17BFCFA10021CB87 /* FDTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDTextView.m; sourceTree = "<group>"; };
 		B5AD8CD717F87947008FB926 /* FDTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTitleView.h; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 		B56EA73217F77E5300A0FE80 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B5755DD317FE5D5D00198439 /* FDUserTableCellView.xib */,
 				B537DDEE17B677B700052DD3 /* FluxDeckViewController.xib */,
 				B55702E617FCE77600A0DB2B /* FDChatTableCellView.h */,
 				B55702E717FCE77600A0DB2B /* FDChatTableCellView.m */,
@@ -349,6 +352,7 @@
 				B537DDBA17B6516300052DD3 /* Credits.rtf in Resources */,
 				B537DDC017B6516400052DD3 /* MainMenu.xib in Resources */,
 				B537DDF017B677B700052DD3 /* FluxDeckViewController.xib in Resources */,
+				B5755DD417FE5D5D00198439 /* FDUserTableCellView.xib in Resources */,
 				B537DDF517B6837500052DD3 /* FDFlowViewController.xib in Resources */,
 				B56EA72F17F745C300A0FE80 /* Podfile in Resources */,
 				B56EA73417F7CD0E00A0FE80 /* FDFlowButton.xib in Resources */,
@@ -553,6 +557,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 80DD64DE3DF84D4F86084536 /* Pods.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -569,6 +574,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 80DD64DE3DF84D4F86084536 /* Pods.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

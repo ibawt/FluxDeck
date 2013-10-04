@@ -100,12 +100,6 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	[challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
 }
 
--(BOOL)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse
-{
-	//return !self.isStreaming;
-	return NO;
-}
-
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
 {
 	if( [data length] == 1 && ((char*)data.bytes)[0] == '\n') {
@@ -128,8 +122,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 					left = right + 1;
 					right += 2;
 					NSError *error = nil;
-					NSObject *o = [NSJSONSerialization JSONObjectWithData:d options:0 error:&error];
-					self.callback(o, error);
+					self.callback(d, error);
 				} else {
 					right++;
 				}
@@ -141,13 +134,10 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-	NSError *error = nil;
-
-	NSObject *obj = [NSJSONSerialization JSONObjectWithData:self.data options:0 error:&error];
-	self.data = nil;
 	self.isActive = false;
-	self.callback(obj, error);
+	self.callback(self.data, nil);
 	self.callback = nil;
+	self.data = nil;
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

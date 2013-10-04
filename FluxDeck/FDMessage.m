@@ -10,6 +10,8 @@
 #import "FluxDeck.h"
 #import <TwitterText.h>
 #import <math.h>
+#import "FluxDeck.h"
+
 static const NSString *kFDHashTag = @"HashTag";
 static const NSString *kFDListName = @"ListName";
 static const NSString *kFDScreenName = @"ScreenName";
@@ -45,7 +47,7 @@ static const NSString *kFDSymbol = @"Symbol";
 }
 
 + (NSValueTransformer *)appJSONTransformer {
-    NSDictionary *states = @{
+    const NSDictionary *states = @{
 							 @"chat": @(FDChat),
 							 @"influx": @(FDInflux),
 							 @"<null>": @(FDNull),
@@ -83,6 +85,9 @@ static const NSString *kFDSymbol = @"Symbol";
 	for( TwitterTextEntity *te in entities ) {
 		NSDictionary *attr = nil;
 		NSString *value = [str substringWithRange:te.range];
+		if( value == nil ) {
+			continue;
+		}
 		switch(te.type ) {
 			case TwitterTextEntityHashtag:
 				attr = @{ kFDHashTag : value,
@@ -104,8 +109,8 @@ static const NSString *kFDSymbol = @"Symbol";
 						  };
 				break;
 		}
-
-		[ds addAttributes:attr range:te.range];
+		if( attr != nil )
+			[ds addAttributes:attr range:te.range];
 	}
 
 	self.displayString = ds;
@@ -126,7 +131,7 @@ static const NSString *kFDSymbol = @"Symbol";
 {
 	if( !fequal(width, self.rowWidth) ) {
 		NSRect rect = [self.displayString boundingRectWithSize:NSMakeSize(width, 0) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)];
-		self.rowHeight = rect.size.height + 3;
+		self.rowHeight = rect.size.height + kFDChatLinePadding;
 	}
 	return self.rowHeight;
 }

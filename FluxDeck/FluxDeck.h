@@ -10,3 +10,5 @@
 
 NSValueTransformer* FDTimestampValueTransformer(void);
 NSValueTransformer* FDBooleanValueTransformer(void);
+
+#define kFDChatLinePadding 3.0f

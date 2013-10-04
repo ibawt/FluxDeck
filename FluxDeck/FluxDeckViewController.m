@@ -79,9 +79,9 @@ static FluxDeckViewController* instance = nil;
 
 -(void)getFlows
 {
-	[FDRequest initWithString:@"https://api.flowdock.com/flows?users=1" withBlock:^(NSObject *responseObject, NSError* error) {
+	[FDRequest initWithString:@"https://api.flowdock.com/flows?users=1" withBlock:^(NSData *responseObject, NSError* error) {
 		if( !error ) {
-			NSArray *jsonFlows = (NSArray*)responseObject;
+			NSArray *jsonFlows = (NSArray*)[NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil];
 			CGFloat x = self.flowSettings.frame.origin.x + self.flowSettings.frame.size.width;
 			for( NSDictionary *dict in jsonFlows) {
 				FDFlow* flow = [MTLJSONAdapter modelOfClass:FDFlow.class fromJSONDictionary:dict error:nil];

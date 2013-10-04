@@ -24,7 +24,8 @@
 	[super drawRect:dirtyRect];
 	NSRectClip(dirtyRect);
 	//f8f8ff
-	[[NSColor colorWithCGColor:CGColorCreateGenericRGB(0.95, 0.95, 1.0, 1.0)] setFill];
+	NSColor* fillColor = [NSColor colorWithSRGBRed:0.95 green:0.95 blue:1.0 alpha:1.0];
+	[fillColor setFill];
 	NSColor *color = [NSColor colorWithSRGBRed:0.7 green:0.7 blue:0.8 alpha:1.0];
 	[color setStroke];
 
