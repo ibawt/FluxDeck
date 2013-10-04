@@ -47,7 +47,7 @@ static const NSString *kFDSymbol = @"Symbol";
 }
 
 + (NSValueTransformer *)appJSONTransformer {
-    const NSDictionary *states = @{
+    NSDictionary *states = @{
 							 @"chat": @(FDChat),
 							 @"influx": @(FDInflux),
 							 @"<null>": @(FDNull),
@@ -118,7 +118,7 @@ static const NSString *kFDSymbol = @"Symbol";
 
 -(BOOL)verifyRowHeightForWidth:(CGFloat)w withHeight:(CGFloat)h
 {
-	if( fequal(w, self.rowWidth) && fequal(self.rowWidth, h) ) {
+	if( fequal(w, self.rowWidth) && fequal(h, self.rowHeight)) {
 		return YES;
 	} else {
 		self.rowWidth = w;

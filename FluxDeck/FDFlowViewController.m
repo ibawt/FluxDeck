@@ -313,7 +313,8 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 			cell.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 			cell.textView = [[FDTextView alloc] initWithFrame:NSMakeRect(80, 0, tableView.bounds.size.width-80, 0)];
 			cell.identifier = @"ChatTableCellView";
-			[cell.textView setHorizontallyResizable:NO];
+			[cell.textView setHorizontallyResizable:YES];
+			[cell.textView setVerticallyResizable:YES];
 			cell.usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 80, 0)];
 			[cell.usernameField setDrawsBackground:NO];
 			[cell.usernameField setBordered:NO];
@@ -324,14 +325,14 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		}
 		CGRect frame = cell.frame;
 		FDMessage *msg = self.messages[row];
-		frame.size.height = [msg rowHeightForWidth:tableView.frame.size.width-80] + kFDChatLinePadding;
-		cell.frame = frame;
 		[cell.textView.textStorage setAttributedString:msg.displayString];
 		[cell.textView sizeToFit];
+		frame.size.height = [msg rowHeightForWidth:tableView.frame.size.width];
+		cell.frame = frame;
+
 		frame = cell.textView.frame;
 		frame.origin.y = 0;
 		cell.textView.frame = frame;
-
 		FDUser *user = [self.flow userForID:msg.user];
 		FDMessage *nextUser = (row > 0) ? self.messages[row-1] : nil;
 		if( nextUser && [nextUser.user isEqualToNumber:user.userID] ) {
@@ -339,13 +340,16 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		} else {
 			cell.usernameField.stringValue = user.nick;
 		}
-		//[cell.usernameField sizeToFit];
+		[cell.usernameField sizeToFit];
 		frame = cell.usernameField.frame;
 		frame.origin.y = cell.textView.frame.size.height - frame.size.height + 3;
 		cell.usernameField.frame = frame;
 		if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
 			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
 		}
+		frame = cell.frame;
+		frame.size.height = cell.textView.frame.size.height;
+		cell.frame = frame;
 		[cell setNeedsDisplay:YES];
 		return cell;
 	}
