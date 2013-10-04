@@ -8,6 +8,7 @@
 
 #import "FDRequest.h"
 #import <FXKeychain.h>
+#import "FluxDeck.h"
 
 static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
@@ -121,8 +122,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 					bytesWritten += right - left;
 					left = right + 1;
 					right += 2;
-					NSError *error = nil;
-					self.callback(d, error);
+					self.callback(d, nil);
 				} else {
 					right++;
 				}
@@ -142,6 +142,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+	DDLogError(@"Connection died with error: %@", error.description);
 	self.isActive = NO;
 	self.callback(nil, error);
 	self.callback = nil;

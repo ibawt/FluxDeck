@@ -89,7 +89,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 			switch( msg.app) {
 				case FDChat:
 					if( [msg.event isEqualToString:@"comment"]) {
-						NSLog(@"%@", msg.description);
+						DDLogInfo(@"%@", msg.description);
 					}
 					[parsedMessages addObject:msg];
 					[msg parseContent];
@@ -111,7 +111,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 	if( parsedMessages.count > 0  ) {
 		self.lastMessageID = [[parsedMessages objectAtIndex:parsedMessages.count-1] msgID];
 		if( self.onScreen ) {
-			NSLog(@"on screen updating: %@", self.flow.name);
+			DDLogInfo(@"on screen updating: %@", self.flow.name);
 			[self.chatTableView beginUpdates];
 			[self.messages addObjectsFromArray:parsedMessages];
 			[self trimMessages];
@@ -120,7 +120,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 
 			[self scrollToBottom];
 		} else {
-			NSLog(@"not on screen updating: %@", self.flow.name);
+			DDLogInfo(@"not on screen updating: %@", self.flow.name);
 			[self.messages addObjectsFromArray:parsedMessages];
 			[self trimMessages];
 		}
@@ -130,7 +130,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 -(void)trimMessages
 {
 	if( self.messages.count > kMAX_SCROLLBACK) {
-		NSLog(@"trimming");
+		DDLogInfo(@"trimming");
 		[self.messages removeObjectsInRange:NSMakeRange(0, self.messages.count - kMAX_SCROLLBACK)];
 	}
 }
@@ -146,31 +146,35 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 
 -(void)fetchMessages:(NSDictionary*)options
 {
-	BOOL stream = NO;
-	NSString *url;
+	@try {
+		BOOL stream = NO;
+		NSString *url;
 
-	if( stream ) {
-		url = [NSString stringWithFormat:@"%@", self.flow.url];
-	}
-	else if( self.lastMessageID) {
-		url = [NSString stringWithFormat:@"%@/messages?limit=%ld&since_id=%@",self.flow.url, kMAX_SCROLLBACK, self.lastMessageID];
-	} else {
-		url = [NSString stringWithFormat:@"%@/messages?limit=%ld", self.flow.url, kMAX_SCROLLBACK];
-	}
-	
-	[FDRequest initWithString:url withBlock:^(NSData *data, NSError *error){
-		@autoreleasepool {
-			NSObject *object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-			NSArray *array;
-			if( [object isKindOfClass:NSDictionary.class]) {
-				array = [[NSArray alloc] initWithObjects:object, nil];
-			} else {
-				array = (NSArray*)object;
-			}
-			[self parseMessages:array];
-			[self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
+		if( stream ) {
+			url = [NSString stringWithFormat:@"%@", self.flow.url];
 		}
-	} forStreaming:NO];
+		else if( self.lastMessageID) {
+			url = [NSString stringWithFormat:@"%@/messages?limit=%ld&since_id=%@",self.flow.url, kMAX_SCROLLBACK, self.lastMessageID];
+		} else {
+			url = [NSString stringWithFormat:@"%@/messages?limit=%ld", self.flow.url, kMAX_SCROLLBACK];
+		}
+
+		[FDRequest initWithString:url withBlock:^(NSData *data, NSError *error){
+			@autoreleasepool {
+				NSObject *object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+				NSArray *array;
+				if( [object isKindOfClass:NSDictionary.class]) {
+					array = [[NSArray alloc] initWithObjects:object, nil];
+				} else {
+					array = (NSArray*)object;
+				}
+				[self parseMessages:array];
+				[self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
+			}
+		} forStreaming:stream];
+	} @catch( NSException *e) {
+		DDLogError(@"Caught Exception in %s: %@", __PRETTY_FUNCTION__, e.description);
+	}
 }
 
 
@@ -201,7 +205,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 		NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
 		NSString *url = [NSString stringWithFormat:@"https://api.flowdock.com/flows/%@/%@/messages", array[0], array[1]];
 		[FDRequest initWithString:url withBlock:^(NSObject *json, NSError* error) {
-			NSLog(@"%@", json);
+			DDLogInfo(@"[MessageSend] - %@", tf.stringValue);
 		} withData:data];
 		tf.stringValue = @"";
 	}
@@ -313,6 +317,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 			cell.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 			cell.textView = [[FDTextView alloc] initWithFrame:NSMakeRect(80, 0, tableView.bounds.size.width-80, 0)];
 			cell.identifier = @"ChatTableCellView";
+			cell.textView.autoresizingMask = NSViewWidthSizable;
 			[cell.textView setHorizontallyResizable:YES];
 			[cell.textView setVerticallyResizable:YES];
 			cell.usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 80, 0)];
@@ -344,9 +349,9 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		frame = cell.usernameField.frame;
 		frame.origin.y = cell.textView.frame.size.height - frame.size.height + 3;
 		cell.usernameField.frame = frame;
-		if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
-			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-		}
+		//if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
+		[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+		//}
 		frame = cell.frame;
 		frame.size.height = cell.textView.frame.size.height;
 		cell.frame = frame;

@@ -11,7 +11,8 @@
 
 @interface FDAppDelegate : NSObject <NSApplicationDelegate>
 
-@property (assign) IBOutlet NSView   *mainView;
-@property (assign) IBOutlet NSWindow *window;
-@property (nonatomic,strong) IBOutlet FluxDeckViewController *viewController;
+@property (nonatomic,weak) IBOutlet NSView   *mainView;
+@property (nonatomic,weak) IBOutlet NSWindow *window;
+@property (nonatomic,strong) FluxDeckViewController *viewController;
+
 @end
