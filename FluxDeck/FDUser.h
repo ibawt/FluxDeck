@@ -23,6 +23,3 @@
 
 -(BOOL)isIdle;
 @end
-
-
-FDUser *FDGetUserFromID(NSString *userID);

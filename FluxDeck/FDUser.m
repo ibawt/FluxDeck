@@ -48,10 +48,3 @@
 }
 
 @end
-
-
-
-FDUser *FDGetUserFromID(NSString *userID)
-{
-	return [[FluxDeckViewController instance].users objectForKey:userID];
-}

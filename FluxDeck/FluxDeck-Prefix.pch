@@ -7,4 +7,6 @@
 #endif
 
 #import <DDLog.h>
-#import "FluxDeck.h"
+#import <Mantle.h>
+#import <Rebel.h>
+#import <TwitterText.h>

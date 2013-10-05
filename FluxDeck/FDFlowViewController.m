@@ -30,7 +30,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 
 
 @interface FDFlowViewController ()
-@property (strong) FDRequest* requestStream;
+@property (nonatomic,strong) FDRequest* requestStream;
 @end
 
 @implementation FDFlowViewController
@@ -39,21 +39,11 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
-    self.messages = [[NSMutableArray alloc] init];
+    self.messages = [[NSMutableArray alloc] initWithCapacity:kMAX_SCROLLBACK];
     self.influx = [[NSMutableArray alloc] init];
   }
     
   return self;
-}
-
-+(NSOperationQueue*)queue
-{
-	static NSOperationQueue *queue = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		queue = [[NSOperationQueue alloc] init];
-	});
-	return queue;
 }
 
 -(void)sendNotification:(FDMessage*)message
@@ -157,7 +147,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 	[self scrollToBottom];
 }
 
--(void)fetchMessages:(NSDictionary*)options
+-(void)fetchMessages
 {
 	@try {
 		BOOL stream = NO;
@@ -182,7 +172,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 					array = (NSArray*)object;
 				}
 				[self parseMessages:array];
-				[self performSelector:@selector(fetchMessages:) withObject:nil afterDelay:5];
+				[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
 			}
 		} forStreaming:stream];
 	} @catch( NSException *e) {
@@ -195,14 +185,9 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 {
 	_flow = flow;
 	[self.flow sortUsers];
-	[self populateUsers];
-	[self fetchMessages:nil];
+	[self fetchMessages];
 }
 
--(void)populateUsers
-{
-	[self.userTableView reloadData];
-}
 
 -(IBAction)textEntered:(id)sender
 {
@@ -327,19 +312,6 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		FDChatTableCellView *cell = [tableView makeViewWithIdentifier:@"ChatTableCellView" owner:self];
 		if( cell == nil ) {
 			cell = [[FDChatTableCellView alloc] initWithFrame:NSMakeRect(0, 0, tableView.frame.size.width, 0)];
-			cell.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-			cell.textView = [[FDTextView alloc] initWithFrame:NSMakeRect(80, 0, tableView.bounds.size.width-80, 0)];
-			cell.identifier = @"ChatTableCellView";
-			cell.textView.autoresizingMask = NSViewWidthSizable;
-			[cell.textView setHorizontallyResizable:YES];
-			[cell.textView setVerticallyResizable:YES];
-			cell.usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 80, 0)];
-			[cell.usernameField setDrawsBackground:NO];
-			[cell.usernameField setBordered:NO];
-			[cell.usernameField setBezeled:NO];
-			cell.usernameField.textColor = [NSColor colorWithSRGBRed:0.3 green:0.3 blue:0.3 alpha:1.0f];
-			[cell addSubview:cell.textView];
-			[cell addSubview:cell.usernameField];
 		}
 		CGRect frame = cell.frame;
 		FDMessage *msg = self.messages[row];
@@ -362,9 +334,9 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		frame = cell.usernameField.frame;
 		frame.origin.y = cell.textView.frame.size.height - frame.size.height + 3;
 		cell.usernameField.frame = frame;
-		//if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
-		[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-		//}
+		if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
+			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+		}
 		frame = cell.frame;
 		frame.size.height = cell.textView.frame.size.height ;
 		cell.frame = frame;

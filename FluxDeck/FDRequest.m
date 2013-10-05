@@ -104,7 +104,7 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
 {
-	if( [data length] == 1 && ((char*)data.bytes)[0] == '\n') {
+	if( self.isStreaming && [data length] == 1 && ((char*)data.bytes)[0] == '\n') {
 		return;
 	}
 	if( self.data == nil ) {
