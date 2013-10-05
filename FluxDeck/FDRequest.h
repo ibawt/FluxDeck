@@ -14,7 +14,9 @@ typedef void (^FDRequestCallback)(NSData *data, NSError *error);
 +(FDRequest*) initWithString:(NSString *)url withBlock:(FDRequestCallback)block;
 +(FDRequest*) initWithString:(NSString *)url withBlock:(FDRequestCallback)block	forStreaming:(BOOL)isStreaming;
 +(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block withData:(NSData*)data;
++(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block withLocalFile:(NSURL*)file;
 @property (nonatomic,strong) NSMutableData *data;
 @property (nonatomic,copy) FDRequestCallback callback;
 @property (nonatomic,assign) BOOL isActive;
+@property (nonatomic,copy) NSString *mimeType;
 @end

@@ -9,7 +9,7 @@
 #import "FDRequest.h"
 #import <FXKeychain.h>
 #import "FluxDeck.h"
-
+#import <Base64.h>
 static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 @interface FDRequest ()
@@ -52,6 +52,34 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	[urlConn start];
 	return req;
 }
++(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block withLocalFile:(NSURL*)file
+{
+	FDRequest *req = [[FDRequest alloc] init];
+	__weak FDRequest *weakReq = req;
+	req.callback = ^(NSData *data, NSError *error ) {
+		NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
+		json[@"event"] = @"file";
+		json[@"content"] = @{ @"data" : [data base64EncodedString],
+							  @"content_type": weakReq.mimeType,
+							  @"file_name" : file.lastPathComponent
+							  };
+		NSError *jsonError;
+		NSData *jsonData = [NSJSONSerialization dataWithJSONObject:json options:0 error:&jsonError];
+
+		if( jsonError ) {
+			DDLogError(@"error in serializing file: %@", jsonError.description);
+			block(nil,jsonError);
+		} else {
+			[FDRequest initWithString:url withBlock:block withData:jsonData];
+		}
+	};
+
+	NSURLRequest *urlReq = [NSURLRequest requestWithURL:file];
+
+	NSURLConnection *urlConn = [[NSURLConnection alloc] initWithRequest:urlReq delegate:req];
+	[urlConn start];
+	return req;
+}
 
 +(FDRequest*)initWithString:(NSString *)url withBlock:(FDRequestCallback)block forStreaming:(BOOL)streaming
 {
@@ -77,6 +105,10 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	return req;
 }
 
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+	self.mimeType = [response MIMEType];
+}
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
 	if( [challenge previousFailureCount] ) {

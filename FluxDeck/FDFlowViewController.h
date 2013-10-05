@@ -13,6 +13,7 @@
 @interface FDFlowViewController : RBLViewController<NSTableViewDataSource,NSTableViewDelegate>
 
 -(IBAction)textEntered:(id)sender;
+-(IBAction)attachFilePushed:(id)sender;
 @property (nonatomic,weak) IBOutlet NSTextField *titleField;
 @property (nonatomic,weak) IBOutlet RBLView *userView;
 @property (nonatomic,weak) IBOutlet RBLView *titleView;

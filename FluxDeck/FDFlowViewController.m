@@ -73,6 +73,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 
 -(void)parseMessages:(NSArray*)messages
 {
+	BOOL updateUsers = NO;
 	NSMutableArray *parsedMessages = [[NSMutableArray alloc] init];
 	for( NSDictionary *d in messages ) {
 		FDMessage *msg = [MTLJSONAdapter modelOfClass:FDMessage.class fromJSONDictionary:d error:nil];
@@ -80,6 +81,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 		if( [msg.event isEqualToString:@"backend.join.user"] ) {
 			FDUser *user = [MTLJSONAdapter modelOfClass:FDUser.class fromJSONDictionary:(NSDictionary*)msg.content error:nil];
 			[self.flow.users addObject:user];
+			updateUsers = YES;
 		} else if([msg.event isEqualToString:@"action"] ) {
 			//idk
 		}
@@ -103,6 +105,7 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 						NSNumber *date = [msg.content valueForKey:@"last_activity"];
 						if( date ) {
 							[self.flow setLastActivity:[NSDate dateWithTimeIntervalSince1970:date.floatValue/1000.0] withUserID:msg.user];
+							updateUsers = YES;
 						}
 					}
 					break;
@@ -119,6 +122,9 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 			[self.chatTableView endUpdates];
 			[self.chatTableView reloadData];
 
+			if( updateUsers ) {
+				[self.userTableView reloadData];
+			}
 			[self scrollToBottom];
 		} else {
 
@@ -128,6 +134,25 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 			[self trimMessages];
 		}
 	}
+}
+
+-(IBAction)attachFilePushed:(id)sender
+{
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	openPanel.canChooseDirectories = NO;
+	openPanel.canChooseFiles = YES;
+	openPanel.allowsMultipleSelection = NO;
+
+	if( [openPanel runModal] == NSOKButton ) {
+		NSURL *fileURL = [openPanel URL];
+		NSArray *array = [self.flow.flowID componentsSeparatedByString:@":"];
+		NSString *url = [NSString stringWithFormat:@"https://api.flowdock.com/flows/%@/%@/messages", array[0], array[1]];
+		[FDRequest initWithString:url withBlock:^(NSObject *json, NSError* error) {
+			DDLogInfo(@"[MessageSend] - %@", json.description);
+		} withLocalFile:fileURL];
+
+	}
+
 }
 
 -(void)trimMessages
