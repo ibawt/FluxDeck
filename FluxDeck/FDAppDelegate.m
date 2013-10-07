@@ -11,6 +11,7 @@
 #import <DDTTYLogger.h>
 #import <DDASLLogger.h>
 #import <DDFileLogger.h>
+#import <TMCache.h>
 
 int ddLogLevel = LOG_LEVEL_VERBOSE;
 
@@ -51,6 +52,11 @@ int ddLogLevel = LOG_LEVEL_VERBOSE;
 		[self.window makeKeyAndOrderFront:self];
 	}
 	return YES;
+}
+
+-(void)applicationWillTerminate:(NSNotification *)notification
+{
+	
 }
 
 @end

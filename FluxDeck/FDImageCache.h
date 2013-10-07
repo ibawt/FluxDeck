@@ -10,7 +10,7 @@
 
 @interface FDImageCache : NSObject
 
-+(void)getDataForURL:(NSString*)url onComplete:( void (^)(NSImage* data, NSError *error))callback;
++(void)getDataForURL:(NSString*)url onComplete:( void (^)(NSData* data, NSError *error))callback;
 +(FDImageCache*)instance;
-
++(void)setDataForURL:(NSString*)url withImage:(NSData*)image;
 @end

@@ -11,6 +11,7 @@
 #import <TwitterText.h>
 #import <math.h>
 #import "FluxDeck.h"
+#import "FDImageCache.h"
 
 static const NSString *kFDHashTag = @"HashTag";
 static const NSString *kFDListName = @"ListName";
@@ -67,6 +68,17 @@ static const NSString *kFDSymbol = @"Symbol";
 
 	if( [self.event isEqualToString:@"file"] ) {
 		str = @"file";
+
+		NSDictionary *dict = (NSDictionary*)self.content;
+
+		if( dict[@"image"] ) {
+			self.isImageCell = YES;
+			self.rowHeight = [dict[@"image"][@"height"] floatValue];
+			self.imageURL = [NSString stringWithFormat:@"https:/api.flowdock.com/%@", dict[@"path"]];
+			[FDImageCache getDataForURL:self.imageURL onComplete:^(NSData *data, NSError*error) {
+				self.image = [[NSImage alloc] initWithData:data];
+			}];
+		}
 	}
 	else if( [self.event isEqualToString:@"comment"]) {
 		str = [self.content valueForKey:@"text"];
@@ -75,6 +87,16 @@ static const NSString *kFDSymbol = @"Symbol";
 		str = (NSString*)self.content;
 	} else{
 		NSLog(@"wierd shit: %@", self.description);
+	}
+	// move link detection to twitter text entities? not sure how to do mixed images and text
+	if( [str hasSuffix:@"png"] || [str hasSuffix:@"gif"] || [str hasSuffix:@"jpg"] || [str hasSuffix:@"jpeg"]) {
+		self.isImageCell = YES;
+		self.imageURL = (NSString*)self.content;
+		[FDImageCache getDataForURL:(NSString*)self.content onComplete:^(NSData *data, NSError *error ) {
+			self.image = [[NSImage alloc] initWithData:data];
+			self.rowHeight = self.image.size.height;
+		}];
+		return;
 	}
 
 	NSArray *entities = [TwitterText entitiesInText:str];
@@ -125,8 +147,28 @@ static const NSString *kFDSymbol = @"Symbol";
 	}
 }
 
+-(void)saveImageFrame
+{
+	if( self.image ) {
+		NSBitmapImageRep *bmp = [self.image representations][0];
+
+		self.currentFrame = [bmp valueForProperty:NSImageCurrentFrame];
+	}
+}
+
+-(void)setImageFrame
+{
+	NSBitmapImageRep *bmp = [self.image representations][0];
+	if( self.currentFrame ) {
+		[bmp setProperty:NSImageCurrentFrame withValue:self.currentFrame];
+	}
+}
+
 -(CGFloat)rowHeightForWidth:(CGFloat)width
 {
+	if( self.isImageCell ) {
+		return self.rowHeight;
+	}
 	if( !fequal(width, self.rowWidth) ) {
 		NSRect rect = [self.displayString boundingRectWithSize:NSMakeSize(width, 0) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)];
 		self.rowHeight = rect.size.height + kFDChatLinePadding;

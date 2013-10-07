@@ -30,18 +30,17 @@
 	return instance;
 }
 
-+(void)getDataForURL:(NSString *)url onComplete:(void (^)(NSImage *, NSError *))callback
++(void)getDataForURL:(NSString *)url onComplete:(void (^)(NSData *, NSError *))callback
 {
+	callback(nil,nil);
 	[[TMCache sharedCache] objectForKey:url block:^(TMCache *cache, NSString *key, id object) {
-		if( object == nil ) {
-			[FDRequest initWithString:url withBlock:^(NSObject *obj, NSError *error) {
-				NSImage *image = [[NSImage alloc] initWithData:(NSData*)obj];
-				callback(image,error);
-			}];
-		} else {
-			callback(object,nil);
-		}
+		callback(object,nil);
 	}];
+}
+
++(void)setDataForURL:(NSString *)url withImage:(NSData *)image
+{
+	[[TMCache sharedCache] setObject:image forKey:url];
 }
 
 @end

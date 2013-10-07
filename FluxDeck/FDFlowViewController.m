@@ -16,10 +16,21 @@
 #import "FDUserTableCellView.h"
 #import "FDChatTableCellView.h"
 #import "FluxDeck.h"
+#import "FDImageCellView.h"
 
 #include <math.h>
+@implementation NSMutableArray (WeakReferences)
++ (id)mutableArrayUsingWeakReferences {
+    return [self mutableArrayUsingWeakReferencesWithCapacity:0];
+}
 
-static const NSTimeInterval kFDFlowPollTime = 3.0;
++ (id)mutableArrayUsingWeakReferencesWithCapacity:(NSUInteger)capacity {
+    CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
+    // We create a weak reference array
+    return (id)CFBridgingRelease(CFArrayCreateMutable(0, capacity, &callbacks));
+}
+@end
+static const NSTimeInterval kFDFlowPollTime = 5.0;
 
 static NSString *kBUILDOK_ICON = @"https://d2cxspbh1aoie1.cloudfront.net/avatars/ac9a7ed457c803acfe8d29559dd9b911/120";
 
@@ -39,8 +50,9 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
-    self.messages = [[NSMutableArray alloc] initWithCapacity:kMAX_SCROLLBACK];
-    self.influx = [[NSMutableArray alloc] init];
+	  self.messages = [[NSMutableArray alloc] initWithCapacity:kMAX_SCROLLBACK];
+	  self.influx = [[NSMutableArray alloc] init];
+	  self.timeToRefresh = kFDFlowPollTime;
   }
     
   return self;
@@ -165,8 +177,12 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 
 -(void)setOnScreen:(BOOL)onScreen
 {
-	if(!self.onScreen ) {
+	if(!self.onScreen && onScreen) {
 		[self.chatTableView reloadData];
+	}
+	if( !onScreen && self.imageTimer ) {
+		[self.imageTimer invalidate];
+		self.imageTimer = nil;
 	}
 	_onScreen = onScreen;
 	[self scrollToBottom];
@@ -197,11 +213,21 @@ static const NSUInteger kMAX_SCROLLBACK = 128;
 					array = (NSArray*)object;
 				}
 				[self parseMessages:array];
-				[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:5];
+				if( self.onScreen ) {
+					self.timeToRefresh = 1.5;
+				} else {
+					self.timeToRefresh = kFDFlowPollTime;
+				}
+				[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:self.timeToRefresh];
 			}
 		} forStreaming:stream];
 	} @catch( NSException *e) {
 		DDLogError(@"Caught Exception in %s: %@", __PRETTY_FUNCTION__, e.description);
+
+		self.timeToRefresh = MIN(self.timeToRefresh*1.5, 30 );
+
+		DDLogInfo(@"backing off poll time");
+		[self performSelector:@selector(fetchMessages) withObject:nil afterDelay:self.timeToRefresh];
 	}
 }
 
@@ -323,10 +349,50 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if( tableView == self.chatTableView ) {
 		FDMessage* msg = [self.messages objectAtIndex:row];
+		if( msg.isImageCell ) {
+			return msg.rowHeight ? msg.rowHeight : 22;
+		}
+
 		return [msg rowHeightForWidth:tableView.frame.size.width-80];
 	} else if( tableView == self.influxTableView) {
 	}
 	return 22;
+}
+
+-(void)getBestSizeForImage:(NSImage*)image
+{
+	CGSize size = image.size;
+
+	if( size.width > self.chatTableView.frame.size.width ) {
+		size.height = size.height * self.chatTableView.frame.size.width / image.size.width;
+		size.width = self.chatTableView.frame.size.width;
+	}
+	image.size = size;
+
+}
+
+-(void)addToImageRefresh:(FDImageCellView*)cell
+{
+	if( self.imagesToRefresh == nil ) {
+		self.imagesToRefresh = [[NSMutableArray alloc] init];
+	}
+	[self.imagesToRefresh addObject:cell];
+
+	if( self.imageTimer == nil ) {
+		self.imageTimer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(refreshImages) userInfo:nil repeats:YES];
+
+		[[NSRunLoop mainRunLoop] addTimer:self.imageTimer forMode:NSDefaultRunLoopMode];
+	}
+}
+
+-(void)refreshImages
+{
+	if( self.onScreen ) {
+		for( FDImageCellView *cell in self.imagesToRefresh ) {
+			if( cell.onScreen )
+				[cell setNeedsDisplay:YES];
+		}
+	}
 }
 
 -(NSView*)makeChatCell:(NSMutableDictionary*)msg withTableView:(NSTableView*)tableView withRow:(NSInteger)row
@@ -334,12 +400,41 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 	if( tableView == self.influxTableView ) {
 	}
 	else if( self.chatTableView == tableView ) {
+		FDMessage *msg = self.messages[row];
+
+		if( msg.isImageCell) {
+			FDImageCellView *cell = [tableView makeViewWithIdentifier:@"ImageCell" owner:self];
+			if( cell == nil ) {
+				cell = [[FDImageCellView alloc] initWithFrame:NSMakeRect(0,0,tableView.frame.size.width,22)];
+				cell.identifier = @"ImageCell";
+			}
+			cell.message = msg;
+			
+			if( msg.image == nil ) {
+				[FDRequest initWithString:msg.imageURL withBlock:^(NSData *data, NSError*error) {
+					NSImage *image = [[NSImage alloc] initWithData:data];
+					[FDImageCache setDataForURL:msg.imageURL withImage:data];
+					msg.image = image;
+					msg.rowHeight = image.size.height;
+					cell.image = image;
+					cell.frame = NSMakeRect(0, 0, tableView.frame.size.width, msg.rowHeight);
+					cell.onScreen = YES;
+					[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+					[self addToImageRefresh:cell];
+				}];
+			} else {
+				cell.image= msg.image;
+				cell.onScreen = YES;
+				[self addToImageRefresh:cell];
+			}
+			return cell;
+		}
+
 		FDChatTableCellView *cell = [tableView makeViewWithIdentifier:@"ChatTableCellView" owner:self];
 		if( cell == nil ) {
 			cell = [[FDChatTableCellView alloc] initWithFrame:NSMakeRect(0, 0, tableView.frame.size.width, 0)];
 		}
 		CGRect frame = cell.frame;
-		FDMessage *msg = self.messages[row];
 		[cell.textView.textStorage setAttributedString:msg.displayString];
 		[cell.textView sizeToFit];
 		frame.size.height = [msg rowHeightForWidth:tableView.frame.size.width];
@@ -358,6 +453,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		[cell.usernameField sizeToFit];
 		frame = cell.usernameField.frame;
 		frame.origin.y = cell.textView.frame.size.height - frame.size.height + 3;
+		frame.origin.x = 0;
 		cell.usernameField.frame = frame;
 		if(![msg verifyRowHeightForWidth:cell.frame.size.width withHeight:cell.frame.size.height]) {
 			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
@@ -365,7 +461,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 		frame = cell.frame;
 		frame.size.height = cell.textView.frame.size.height ;
 		cell.frame = frame;
-		[cell setNeedsDisplay:YES];
+		//[cell setNeedsDisplay:YES];
 		return cell;
 	}
 	return nil;

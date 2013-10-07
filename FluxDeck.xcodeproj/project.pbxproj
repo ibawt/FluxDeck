@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2FF3AE4EB3AC4499901512DC /* libPods-FluxDeckTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C251B66DE644BFB1B7FBFB /* libPods-FluxDeckTests.a */; };
+		B51704A21801B89B0038F4B5 /* FDImageCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B51704A11801B89B0038F4B5 /* FDImageCellView.m */; };
 		B537DDAA17B6516300052DD3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B537DDA917B6516300052DD3 /* Cocoa.framework */; };
 		B537DDB417B6516300052DD3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B537DDB217B6516300052DD3 /* InfoPlist.strings */; };
 		B537DDB617B6516300052DD3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B537DDB517B6516300052DD3 /* main.m */; };
@@ -54,6 +55,8 @@
 		7E1BF4B90F0C4257B92F5C34 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		80DD64DE3DF84D4F86084536 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		A7B2B7E29FE345BBA8F081D1 /* Pods-FluxDeckTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FluxDeckTests.xcconfig"; path = "Pods/Pods-FluxDeckTests.xcconfig"; sourceTree = "<group>"; };
+		B51704A01801B89B0038F4B5 /* FDImageCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDImageCellView.h; sourceTree = "<group>"; };
+		B51704A11801B89B0038F4B5 /* FDImageCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDImageCellView.m; sourceTree = "<group>"; };
 		B537DDA617B6516300052DD3 /* FluxDeck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FluxDeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B537DDA917B6516300052DD3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		B537DDAC17B6516300052DD3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -248,6 +251,8 @@
 				B5755DD317FE5D5D00198439 /* FDUserTableCellView.xib */,
 				B537DDEE17B677B700052DD3 /* FluxDeckViewController.xib */,
 				B55702E617FCE77600A0DB2B /* FDChatTableCellView.h */,
+				B51704A01801B89B0038F4B5 /* FDImageCellView.h */,
+				B51704A11801B89B0038F4B5 /* FDImageCellView.m */,
 				B55702E717FCE77600A0DB2B /* FDChatTableCellView.m */,
 				B59AA58E17BFCFA10021CB87 /* FDTextView.h */,
 				B59AA58F17BFCFA10021CB87 /* FDTextView.m */,
@@ -302,7 +307,7 @@
 				B58292E717FF56CD00BCA335 /* PBXTargetDependency */,
 			);
 			name = FluxDeckTests;
-			productName = "FluxDeckTests";
+			productName = FluxDeckTests;
 			productReference = B58292DB17FF56CD00BCA335 /* FluxDeckTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -445,6 +450,7 @@
 				B537DDBD17B6516300052DD3 /* FDAppDelegate.m in Sources */,
 				B537DDE017B6526A00052DD3 /* FDUser.m in Sources */,
 				B537DDE317B6528A00052DD3 /* FDRequest.m in Sources */,
+				B51704A21801B89B0038F4B5 /* FDImageCellView.m in Sources */,
 				B537DDE917B66D7E00052DD3 /* FDFlow.m in Sources */,
 				B537DDEF17B677B700052DD3 /* FluxDeckViewController.m in Sources */,
 				B537DDF417B6837500052DD3 /* FDFlowViewController.m in Sources */,

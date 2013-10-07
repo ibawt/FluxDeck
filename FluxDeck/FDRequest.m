@@ -10,6 +10,7 @@
 #import <FXKeychain.h>
 #import "FluxDeck.h"
 #import <Base64.h>
+
 static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 
 @interface FDRequest ()
@@ -142,7 +143,6 @@ static const NSString *kFLOW_DOCK_ENDPOINT = @"https://api.flowdock.com";
 	if( self.data == nil ) {
 		self.data = [[NSMutableData alloc] initWithData:data];
 	} else {
-
 		[self.data appendData:data];
 
 		if( self.isStreaming ) {

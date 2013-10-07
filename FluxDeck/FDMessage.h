@@ -32,8 +32,15 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong) NSAttributedString* displayString;
 @property (nonatomic,assign) CGFloat rowWidth;
 @property (nonatomic,assign) CGFloat rowHeight;
+@property (nonatomic,strong) NSImage *image;
+@property (nonatomic, assign) BOOL isImageCell;
+@property (nonatomic, copy) NSString *imageURL;
+@property (nonatomic,copy) NSNumber *currentFrame;
+
 -(BOOL)verifyRowHeightForWidth:(CGFloat)width withHeight:(CGFloat)height;
 -(CGFloat)rowHeightForWidth:(CGFloat)width;
 -(void)parseContent;
+-(void)saveImageFrame;
+-(void)setImageFrame;
 @end
 

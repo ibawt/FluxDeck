@@ -25,5 +25,8 @@
 @property (nonatomic,strong) NSMutableArray *messages;
 @property (nonatomic,strong) NSMutableArray *influx;
 @property (nonatomic,assign) BOOL onScreen;
+@property (nonatomic,assign) NSTimeInterval timeToRefresh;
+@property (nonatomic,strong) NSMutableArray *imagesToRefresh;
 
+@property (nonatomic,strong) NSTimer *imageTimer;
 @end
