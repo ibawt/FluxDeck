@@ -34,7 +34,6 @@
 
 -(void)prepareForReuse
 {
-	NSLog(@"going into recycle queue");
 }
 
 - (void)drawRect:(NSRect)dirtyRect

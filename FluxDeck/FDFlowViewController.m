@@ -19,17 +19,20 @@
 #import "FDImageCellView.h"
 
 #include <math.h>
-@implementation NSMutableArray (WeakReferences)
-+ (id)mutableArrayUsingWeakReferences {
-    return [self mutableArrayUsingWeakReferencesWithCapacity:0];
-}
 
-+ (id)mutableArrayUsingWeakReferencesWithCapacity:(NSUInteger)capacity {
-    CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
-    // We create a weak reference array
-    return (id)CFBridgingRelease(CFArrayCreateMutable(0, capacity, &callbacks));
-}
-@end
+typedef struct {
+	CGFloat r;
+	CGFloat g;
+	CGFloat b;
+} FDColor;
+static const FDColor kThreadColors[] = {
+	{ 0.4,0.4,0.8 },
+	{ 0.0, 0.4, 0.8},
+	{ 1.0, 0.3, 0.3},
+	{ 0.2, 0.8, 0.0 },
+	{ 0.8, 0.7, 0.2 }
+};
+
 static const NSTimeInterval kFDFlowPollTime = 5.0;
 
 static NSString *kBUILDOK_ICON = @"https://d2cxspbh1aoie1.cloudfront.net/avatars/ac9a7ed457c803acfe8d29559dd9b911/120";
@@ -373,13 +376,15 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 
 -(void)addToImageRefresh:(FDImageCellView*)cell
 {
+	if( !cell.isAnimated )
+		return;
 	if( self.imagesToRefresh == nil ) {
 		self.imagesToRefresh = [[NSMutableArray alloc] init];
 	}
 	[self.imagesToRefresh addObject:cell];
 
 	if( self.imageTimer == nil ) {
-		self.imageTimer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(refreshImages) userInfo:nil repeats:YES];
+		self.imageTimer = [NSTimer timerWithTimeInterval:0.001 target:self selector:@selector(refreshImages) userInfo:nil repeats:YES];
 
 		[[NSRunLoop mainRunLoop] addTimer:self.imageTimer forMode:NSDefaultRunLoopMode];
 	}
@@ -427,6 +432,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 				cell.onScreen = YES;
 				[self addToImageRefresh:cell];
 			}
+			//[cell setNeedsDisplay:YES];
 			return cell;
 		}
 
@@ -459,7 +465,7 @@ shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 			[tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
 		}
 		frame = cell.frame;
-		frame.size.height = cell.textView.frame.size.height ;
+		frame.size.height = cell.textView.frame.size.height;
 		cell.frame = frame;
 		//[cell setNeedsDisplay:YES];
 		return cell;

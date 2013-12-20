@@ -29,4 +29,5 @@
 @property (nonatomic,strong) NSMutableArray *imagesToRefresh;
 
 @property (nonatomic,strong) NSTimer *imageTimer;
+@property (nonatomic,assign) NSUInteger threadColorIndex;
 @end

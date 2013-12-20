@@ -10,9 +10,12 @@
 #import "FDMessage.h"
 
 @interface FDImageCellView : RBLTableCellView
+
 @property (nonatomic,weak) FDMessage *message;
 @property (nonatomic,strong) NSImage *image;
 @property (nonatomic,assign) BOOL onScreen;
 @property (nonatomic,assign) NSTimeInterval lastDrawTime;
 @property (nonatomic,assign) BOOL isAnimated;
+@property (nonatomic,assign) NSColor *threadColor;
+
 @end

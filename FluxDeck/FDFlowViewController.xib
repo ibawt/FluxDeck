@@ -59,7 +59,7 @@
                     </subviews>
                 </customView>
                 <customView wantsLayer="YES" id="x5I-et-Md4" userLabel="User View" customClass="RBLView">
-                    <rect key="frame" x="599" y="-4" width="257" height="570"/>
+                    <rect key="frame" x="599.00000000000011" y="-4" width="257" height="570"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
                     <subviews>
                         <scrollView borderType="groove" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="JkO-Qd-oI0">
@@ -130,7 +130,7 @@
                     </subviews>
                 </customView>
                 <customView wantsLayer="YES" id="dzE-dV-o8d" userLabel="Title View" customClass="FDTitleView">
-                    <rect key="frame" x="0.0" y="566" width="800" height="34"/>
+                    <rect key="frame" x="0.0" y="566" width="800.00000000000011" height="34"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <subviews>
                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="7ab-i0-1TE">
@@ -143,7 +143,7 @@
                             </textFieldCell>
                         </textField>
                         <searchField verticalHuggingPriority="750" id="r2O-zM-rbI">
-                            <rect key="frame" x="546" y="6" width="143" height="22"/>
+                            <rect key="frame" x="546.00000000000011" y="6" width="143" height="22"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                             <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="YtD-jH-YYV">
                                 <font key="font" metaFont="system"/>
@@ -152,7 +152,7 @@
                             </searchFieldCell>
                         </searchField>
                         <popUpButton verticalHuggingPriority="750" id="UiS-KH-wC9">
-                            <rect key="frame" x="695" y="4" width="98" height="26"/>
+                            <rect key="frame" x="695.00000000000011" y="4" width="98" height="26"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="b4Q-mF-qcc" id="uNg-sR-Ptf">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -176,7 +176,7 @@
                     <animations/>
                 </customView>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="rpF-gq-Qeg">
-                    <rect key="frame" x="-1" y="42" width="600" height="524"/>
+                    <rect key="frame" x="-1" y="42" width="600.00000000000011" height="524"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="HZQ-vd-DGI">
                         <rect key="frame" x="1" y="1" width="598" height="522"/>
